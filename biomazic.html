@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioMazic — NEET Biology Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06100a;--bg2:#0b1810;--bg3:#101e13;--card:#131f16;
+  --border:#1a2e1d;--border2:#26402a;
+  --green:#3ddc6e;--gdim:#163d22;--gglow:rgba(61,220,110,.1);
+  --amber:#f0c040;--red:#e05555;--blue:#50a0f0;
+  --white:#f0ede5;--w2:#b8b4ac;--w3:#686460;
+  --mono:'DM Mono',monospace;
+  --disp:'Bebas Neue',sans-serif;
+  --serif:'Fraunces',serif;
+  --sans:'Instrument Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--sans);overflow-x:hidden;cursor:none;line-height:1.6}
+
+/* ── CURSOR ── */
+#cur,#cur-r{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);border-radius:50%}
+#cur{width:9px;height:9px;background:var(--green);transition:transform .12s,width .2s,height .2s;mix-blend-mode:difference}
+#cur-r{width:30px;height:30px;border:1px solid rgba(61,220,110,.45);z-index:9998;transition:left .09s,top .09s,opacity .2s}
+.cur-big #cur{transform:translate(-50%,-50%) scale(2.5)}
+.cur-big #cur-r{width:50px;height:50px}
+
+/* ── NOISE ── */
+body::after{content:'';position:fixed;inset:0;opacity:.4;pointer-events:none;z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E")}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;transition:all .35s}
+nav.scrolled{background:rgba(6,16,10,.94);border-bottom:1px solid var(--border);backdrop-filter:blur(16px)}
+.logo{font-family:var(--disp);font-size:1.9rem;letter-spacing:.04em;color:var(--green);text-decoration:none;cursor:none}
+.logo span{color:var(--white)}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:12px;font-weight:500;color:var(--w3);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;cursor:none}
+.nav-links a:hover{color:var(--green)}
+.nav-cta{background:var(--green);color:var(--bg);font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:.55rem 1.5rem;border:none;cursor:none;clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);transition:all .2s}
+.nav-cta:hover{background:var(--amber)}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:7rem 3rem 3rem;gap:4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 65% 50%,rgba(61,220,110,.07) 0%,transparent 70%),radial-gradient(ellipse 35% 40% at 15% 80%,rgba(240,192,64,.04) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;opacity:.28;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 20%,transparent 80%)}
+.hero-left{position:relative;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.6rem}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--green)}
+.hero-h1{font-family:var(--disp);font-size:clamp(5rem,9vw,9.5rem);line-height:.9;letter-spacing:.02em;margin-bottom:1.6rem}
+.hero-h1 .l1{color:var(--white);display:block}
+.hero-h1 .l2{color:var(--green);display:block}
+.hero-h1 .l3{color:transparent;-webkit-text-stroke:1px var(--w3);display:block}
+.hero-sub{font-family:var(--serif);font-size:1.1rem;font-weight:300;font-style:italic;color:var(--w2);line-height:1.75;max-width:420px;margin-bottom:2.5rem}
+.hero-btns{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.btn-g{background:var(--green);color:var(--bg);font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.85rem 2rem;border:none;cursor:none;clip-path:polygon(10px 0%,100% 0%,100% calc(100% - 10px),calc(100% - 10px) 100%,0% 100%,0% 10px);transition:all .25s;text-decoration:none;display:inline-block}
+.btn-g:hover{background:var(--amber);transform:translateY(-2px)}
+.btn-ghost{font-size:13px;font-weight:500;color:var(--w3);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:color .2s;cursor:none;background:none;border:none}
+.btn-ghost:hover{color:var(--white)}
+.btn-ghost::after{content:'→';transition:transform .2s}
+.btn-ghost:hover::after{transform:translateX(5px)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.hst-n{font-family:var(--disp);font-size:3rem;color:var(--green);line-height:1}
+.hst-l{font-family:var(--mono);font-size:10px;color:var(--w3);letter-spacing:.12em;text-transform:uppercase;margin-top:4px}
+
+/* HERO RIGHT — molecule SVG */
+.hero-right{position:relative;z-index:2;display:flex;justify-content:center;align-items:center}
+.mol-wrap{position:relative;width:340px;height:520px}
+.chip{position:absolute;background:var(--bg3);border:1px solid var(--border2);padding:9px 14px;font-family:var(--mono);font-size:10px;color:var(--green);border-radius:4px;white-space:nowrap;animation:floatY 4s ease-in-out infinite}
+.chip::before{content:'▸ ';opacity:.6}
+.chip:nth-child(1){top:8%;right:-20px;animation-delay:0s}
+.chip:nth-child(2){top:32%;left:-55px;animation-delay:1.3s}
+.chip:nth-child(3){bottom:22%;right:-10px;animation-delay:2.1s}
+.chip:nth-child(4){bottom:7%;left:-35px;animation-delay:.7s}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes pulse{0%,100%{opacity:.9}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* hero staggered entrance */
+.hero-left>*{opacity:0;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) forwards}
+.eyebrow{animation-delay:.08s}.hero-h1{animation-delay:.18s}.hero-sub{animation-delay:.32s}.hero-btns{animation-delay:.46s}.hero-stats{animation-delay:.6s}
+
+/* ── TICKER ── */
+.ticker{background:var(--green);padding:.55rem 0;overflow:hidden;white-space:nowrap}
+.ticker-t{display:inline-block;animation:tickScroll 32s linear infinite;font-family:var(--mono);font-size:11px;color:var(--bg);font-weight:500;letter-spacing:.06em}
+@keyframes tickScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══════════════════════════════════════════
+   SHARED SECTION STYLES
+═══════════════════════════════════════════ */
+section{padding:6rem 3rem;position:relative}
+.sec-label{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.18em;text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:1.1rem}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-h2{font-family:var(--disp);font-size:clamp(2.8rem,5.5vw,5.5rem);line-height:.93;letter-spacing:.02em;margin-bottom:1rem}
+.sec-intro{font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.05rem;color:var(--w2);max-width:580px;line-height:1.8;margin-bottom:3rem}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.revL{opacity:0;transform:translateX(-24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.revL.vis{opacity:1;transform:translateX(0)}
+
+/* ═══════════════════════════════════════════
+   FEATURES
+═══════════════════════════════════════════ */
+.features{background:var(--bg2)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.feat-item{background:var(--card);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:background .3s}
+.feat-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.feat-item:hover{background:var(--bg3)}
+.feat-item:hover::after{transform:scaleX(1)}
+.feat-n{font-family:var(--disp);font-size:4.5rem;color:var(--border2);line-height:1;margin-bottom:1.2rem;transition:color .3s}
+.feat-item:hover .feat-n{color:var(--gdim)}
+.feat-title{font-size:16px;font-weight:600;color:var(--white);margin-bottom:.7rem;line-height:1.3}
+.feat-desc{font-size:13.5px;color:var(--w3);line-height:1.75}
+
+/* ═══════════════════════════════════════════
+   TOPICS BROWSER
+═══════════════════════════════════════════ */
+.topics-sec{background:var(--bg)}
+.class-toggle{display:inline-flex;background:var(--bg3);border:1px solid var(--border);margin-bottom:2.5rem;overflow:hidden}
+.tog-btn{padding:.55rem 1.5rem;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--w3);background:none;border:none;cursor:none;transition:all .2s}
+.tog-btn.active{background:var(--green);color:var(--bg)}
+.topics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.tc{background:var(--card);padding:1.7rem 1.5rem;transition:background .22s;position:relative;overflow:hidden;cursor:none}
+.tc::after{content:'→';position:absolute;bottom:1.4rem;right:1.4rem;color:var(--border2);font-size:1.1rem;transition:all .3s}
+.tc:hover{background:var(--bg2)}
+.tc:hover::after{color:var(--green);transform:translateX(4px)}
+.tc-num{font-family:var(--mono);font-size:10px;color:var(--w3);letter-spacing:.1em;margin-bottom:.45rem}
+.tc-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:.35rem;line-height:1.35}
+.tc-sub{font-size:12.5px;color:var(--w3);line-height:1.55;margin-bottom:.9rem}
+.tc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tctag{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border:1px solid}
+.tctag-g{border-color:var(--gdim);color:var(--green)}
+.tctag-a{border-color:#3a2c00;color:var(--amber)}
+.tctag-r{border-color:#3a1414;color:var(--red)}
+.tctag-b{border-color:#143a5a;color:var(--blue)}
+.dbadge{position:absolute;top:1.2rem;right:1.2rem;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border:1px solid}
+.dhard{background:#1a0808;color:var(--red);border-color:#3a1414}
+.dmed{background:#1a1200;color:var(--amber);border-color:#3a2c00}
+
+/* ═══════════════════════════════════════════
+   LECTURE PREVIEW STRIP
+═══════════════════════════════════════════ */
+.lp-sec{background:var(--bg2)}
+.lp-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:3.5rem;align-items:start}
+.lp-card{border:1px solid var(--border);background:var(--card);overflow:hidden}
+.lp-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.lp-ico{width:38px;height:38px;background:var(--gdim);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.lp-ht{font-size:13.5px;font-weight:600;color:var(--white)}
+.lp-hs{font-size:11px;color:var(--w3);margin-top:2px;font-family:var(--mono)}
+.lp-row{padding:1.15rem 1.6rem;border-bottom:1px solid var(--border)}
+.lp-row:last-child{border-bottom:none}
+.lp-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.45rem}
+.lp-lbl::before{content:'// ';opacity:.5}
+.lp-txt{font-size:13px;color:var(--w2);line-height:1.75}
+.lp-trap{background:rgba(61,220,110,.05);border-left:2px solid var(--green);padding:.7rem 1rem;margin-top:.65rem;font-family:var(--mono);font-size:11.5px;color:var(--w2);line-height:1.6}
+.lp-tip{color:var(--amber);font-size:13px;line-height:1.75}
+
+/* ═══════════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════════ */
+.testi-sec{background:var(--bg)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.tcard{background:var(--card);border:1px solid var(--border);padding:2rem;position:relative;transition:border-color .3s}
+.tcard:hover{border-color:var(--border2)}
+.tcard::before{content:'"';font-family:var(--serif);font-size:5.5rem;color:var(--gdim);line-height:.7;position:absolute;top:.9rem;right:1.4rem}
+.ttext{font-family:var(--serif);font-style:italic;font-weight:300;font-size:.97rem;color:var(--w2);line-height:1.8;margin-bottom:1.4rem}
+.tauth{display:flex;align-items:center;gap:10px}
+.tav{width:36px;height:36px;background:var(--gdim);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--green);flex-shrink:0}
+.tname{font-size:13px;font-weight:600;color:var(--white)}
+.tscore{font-family:var(--mono);font-size:10px;color:var(--amber);margin-top:2px}
+
+/* ═══════════════════════════════════════════
+   PRICING
+═══════════════════════════════════════════ */
+.price-sec{background:var(--bg2)}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;max-width:1000px;margin:0 auto}
+.pcard{background:var(--bg3);border:1px solid var(--border);padding:2.4rem 2rem;position:relative;transition:border-color .3s}
+.pcard:hover{border-color:var(--border2)}
+.pcard.featured{background:var(--card);border-color:var(--green)}
+.pcard.featured::before{content:'MOST POPULAR';position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;letter-spacing:.12em;background:var(--green);color:var(--bg);padding:3px 14px}
+.p-plan{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.9rem}
+.p-amt{font-family:var(--disp);font-size:3.8rem;color:var(--white);line-height:1;margin-bottom:.2rem}
+.p-amt sup{font-size:1.6rem;vertical-align:super}
+.p-period{font-size:12px;color:var(--w3);margin-bottom:1.6rem;font-family:var(--mono)}
+.p-div{height:1px;background:var(--border);margin-bottom:1.6rem}
+.p-feats{list-style:none;margin-bottom:1.8rem}
+.p-feats li{font-size:13px;color:var(--w2);padding:.38rem 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.p-feats li::before{content:'✓';color:var(--green);font-family:var(--mono);font-size:11px;flex-shrink:0;margin-top:2px}
+.p-feats li.off{color:var(--w3)}
+.p-feats li.off::before{content:'–';color:var(--border2)}
+.p-btn{display:block;width:100%;background:var(--green);color:var(--bg);font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.8rem;border:none;cursor:none;clip-path:polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);transition:all .2s}
+.p-btn:hover{background:var(--amber)}
+.p-btn.ghost{background:transparent;color:var(--w2);border:1px solid var(--border2);clip-path:none}
+.p-btn.ghost:hover{border-color:var(--w3);color:var(--white)}
+
+/* ═══════════════════════════════════════════
+   FAQ
+═══════════════════════════════════════════ */
+.faq-sec{background:var(--bg)}
+.faq-wrap{max-width:820px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 0;cursor:none;font-size:15.5px;font-weight:600;color:var(--white);transition:color .2s}
+.faq-q:hover{color:var(--green)}
+.faq-icon{font-family:var(--mono);font-size:20px;color:var(--w3);transition:all .3s;flex-shrink:0;margin-left:1rem}
+.faq-item.open .faq-icon{transform:rotate(45deg);color:var(--green)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-item.open .faq-a{max-height:220px}
+.faq-a p{font-size:13.5px;color:var(--w3);line-height:1.8;padding-bottom:1.4rem}
+
+/* ═══════════════════════════════════════════
+   CTA BANNER
+═══════════════════════════════════════════ */
+.cta-ban{background:var(--green);padding:5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.cta-ban::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(6,16,10,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(6,16,10,.08) 1px,transparent 1px);background-size:40px 40px}
+.cta-ban h2{font-family:var(--disp);font-size:clamp(3.5rem,7.5vw,7rem);color:var(--bg);line-height:.92;letter-spacing:.02em;position:relative;z-index:1;margin-bottom:1.2rem}
+.cta-ban p{font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.15rem;color:rgba(6,16,10,.65);position:relative;z-index:1;margin-bottom:2.2rem}
+.cta-main-btn{background:var(--bg);color:var(--green);font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.95rem 2.5rem;border:none;cursor:none;clip-path:polygon(12px 0%,100% 0%,100% calc(100% - 12px),calc(100% - 12px) 100%,0% 100%,0% 12px);transition:all .25s;position:relative;z-index:1}
+.cta-main-btn:hover{background:var(--bg2);transform:translateY(-2px)}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:2.8rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem}
+.f-logo{font-family:var(--disp);font-size:1.5rem;color:var(--green)}
+.f-logo span{color:var(--w3)}
+.f-links{display:flex;gap:2rem;list-style:none;flex-wrap:wrap}
+.f-links a{font-size:11.5px;color:var(--w3);text-decoration:none;transition:color .2s;cursor:none}
+.f-links a:hover{color:var(--green)}
+.f-copy{font-family:var(--mono);font-size:10.5px;color:var(--w3)}
+
+/* ═══════════════════════════════════════════
+   LECTURE PLATFORM (app layer)
+═══════════════════════════════════════════ */
+#app{display:none;min-height:100vh}
+.app-header{background:var(--bg);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.app-logo{font-family:var(--disp);font-size:1.5rem;color:var(--green);cursor:none}
+.app-logo span{color:var(--white)}
+.back-btn{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--w3);background:none;border:1px solid var(--border);padding:.45rem 1rem;cursor:none;transition:all .2s}
+.back-btn:hover{border-color:var(--green);color:var(--green)}
+.app-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;overflow-x:auto}
+.app-tab{padding:.85rem 1.2rem;font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--w3);background:none;border:none;border-bottom:2px solid transparent;cursor:none;white-space:nowrap;transition:all .2s}
+.app-tab:hover{color:var(--white)}
+.app-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.app-section{display:none;padding:2.5rem 2rem;max-width:1200px;margin:0 auto}
+.app-section.active{display:block}
+.app-sec-title{font-family:var(--disp);font-size:2.2rem;color:var(--white);margin-bottom:.3rem}
+.app-sec-sub{font-size:13px;color:var(--w3);margin-bottom:1.8rem}
+
+/* topic cards in app */
+.app-topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:1.5rem}
+.atc{background:var(--card);padding:1.5rem;cursor:none;position:relative;overflow:hidden;transition:background .2s;border-top:3px solid transparent}
+.atc:hover{background:var(--bg2)}
+.atc::after{content:'Open →';position:absolute;bottom:1rem;right:1rem;font-family:var(--mono);font-size:10px;color:var(--border2);letter-spacing:.06em;transition:all .3s}
+.atc:hover::after{color:var(--green)}
+.atc-num{font-family:var(--mono);font-size:10px;color:var(--w3);letter-spacing:.1em;margin-bottom:.4rem}
+.atc-title{font-size:14.5px;font-weight:600;color:var(--white);margin-bottom:.35rem;line-height:1.3}
+.atc-sub{font-size:12px;color:var(--w3);line-height:1.5;margin-bottom:.8rem}
+.atc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.atc-badge{position:absolute;top:1rem;right:1rem;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border:1px solid}
+
+/* ── MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(6,16,10,.85);z-index:1000;padding:1rem;overflow-y:auto;backdrop-filter:blur(6px)}
+.modal-ov.open{display:flex;justify-content:center;align-items:flex-start}
+.modal{background:var(--bg2);width:100%;max-width:880px;margin:auto;overflow:hidden;border:1px solid var(--border2);box-shadow:0 32px 100px rgba(0,0,0,.5)}
+.modal-head{background:var(--bg);padding:1.8rem 2rem 1.5rem;position:relative;border-bottom:1px solid var(--border)}
+.modal-badge{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.65rem;display:flex;align-items:center;gap:6px}
+.modal-badge::before{content:'//'}
+.modal-title{font-family:var(--disp);font-size:2rem;color:var(--white);line-height:1.1}
+.modal-close{position:absolute;top:1.2rem;right:1.2rem;width:34px;height:34px;background:var(--bg2);border:1px solid var(--border);color:var(--w3);font-size:16px;cursor:none;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{border-color:var(--green);color:var(--green)}
+.modal-tabs{display:flex;background:var(--bg);border-bottom:1px solid var(--border);padding:0 1.5rem}
+.mtab{padding:.8rem 1.2rem;font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--w3);background:none;border:none;border-bottom:2px solid transparent;cursor:none;transition:all .2s;white-space:nowrap}
+.mtab.active{color:var(--green);border-bottom-color:var(--green)}
+.mtab:hover{color:var(--white)}
+.mtab-body{padding:0}
+.tab-c{display:none;padding:1.8rem}
+.tab-c.active{display:block}
+
+/* script sections */
+.sc-block{background:var(--card);border:1px solid var(--border);overflow:hidden;margin-bottom:1.1rem}
+.sc-head{display:flex;align-items:center;gap:10px;padding:.9rem 1.2rem;background:var(--bg);border-bottom:1px solid var(--border)}
+.sc-ico{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--bg2);border:1px solid var(--border);flex-shrink:0}
+.sc-head h3{font-size:13.5px;font-weight:600;color:var(--white)}
+.sc-head span{font-family:var(--mono);font-size:10px;color:var(--w3);margin-left:auto}
+.sc-body{padding:1.2rem;font-size:13.5px;line-height:1.9;color:var(--w2)}
+.sc-body p{margin-bottom:.8rem}
+.sc-body p:last-child{margin-bottom:0}
+.sc-body strong{color:var(--white);font-weight:600}
+.sc-body em{color:var(--amber);font-style:italic}
+.say{background:rgba(61,220,110,.05);border-left:2px solid var(--green);padding:.75rem 1rem;border-radius:0 4px 4px 0;font-style:italic;margin:.7rem 0;color:var(--w2);font-family:var(--serif);font-size:14px;line-height:1.75}
+.neet-trap{background:rgba(224,85,85,.05);border:1px solid rgba(224,85,85,.25);padding:.8rem 1.1rem;margin:.75rem 0;border-radius:2px}
+.neet-trap .trap-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--red);text-transform:uppercase;margin-bottom:4px}
+.neet-trap p{color:var(--w2);font-size:13px;margin:0}
+.pro-card{background:var(--bg);border:1px solid var(--green);padding:1.4rem;margin-top:1.4rem;position:relative;overflow:hidden}
+.pro-card::before{content:'PRO';position:absolute;right:-8px;top:-18px;font-family:var(--disp);font-size:5.5rem;color:rgba(61,220,110,.05);line-height:1}
+.pro-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.15em;color:var(--green);text-transform:uppercase;margin-bottom:8px}
+.pro-card p{font-size:13.5px;color:var(--w2);line-height:1.85}
+.pro-card strong{color:var(--amber)}
+
+/* worksheet */
+.ws-intro-bar{background:var(--bg);border:1px solid var(--border);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem}
+.ws-intro-icon{font-size:2rem}
+.ws-intro-bar h3{font-size:15px;font-weight:600;color:var(--white)}
+.ws-intro-bar p{font-size:12px;color:var(--w3);font-family:var(--mono)}
+.ws-block{background:var(--card);border:1px solid var(--border);overflow:hidden;margin-bottom:1.1rem}
+.ws-bhead{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem;background:var(--bg);border-bottom:1px solid var(--border)}
+.ws-bhead h4{font-size:13px;font-weight:600;color:var(--white)}
+.ws-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;background:var(--gdim);color:var(--green);padding:3px 10px;border:1px solid rgba(61,220,110,.3)}
+.ws-body{padding:1.2rem}
+.question{display:flex;flex-direction:column;gap:7px;margin-bottom:1.1rem}
+.q-row{display:flex;gap:10px;align-items:flex-start}
+.q-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--bg);background:var(--green);width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.q-text{font-size:13.5px;color:var(--w2);line-height:1.6;flex:1}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-left:32px}
+.opt{padding:7px 12px;border:1px solid var(--border);font-size:12.5px;cursor:none;transition:all .15s;background:var(--bg3);color:var(--w2);text-align:left;font-family:var(--sans)}
+.opt:hover{border-color:var(--green);background:rgba(61,220,110,.06);color:var(--white)}
+.opt.correct-o{border-color:#2a7a4a!important;background:rgba(61,220,110,.1)!important;color:var(--green)!important}
+.opt.wrong-o{border-color:#7a2a2a!important;background:rgba(224,85,85,.08)!important;color:var(--red)!important}
+.fb{font-size:12px;font-weight:500;display:none;margin-left:32px;padding:.4rem .7rem;border-left:2px solid}
+.fb.show{display:block}
+.fb-ok{border-color:var(--green);color:var(--green)}
+.fb-no{border-color:var(--red);color:var(--red)}
+.check-btn{display:inline-flex;align-items:center;gap:6px;margin-top:.75rem;padding:7px 18px;background:var(--green);color:var(--bg);border:none;font-size:12.5px;font-weight:600;cursor:none;font-family:var(--sans);transition:background .15s;clip-path:polygon(6px 0%,100% 0%,100% calc(100% - 6px),calc(100% - 6px) 100%,0% 100%,0% 6px)}
+.check-btn:hover{background:var(--amber)}
+.blanks-r{margin-top:.6rem;font-size:12.5px;font-weight:600;font-family:var(--mono);display:none}
+.blanks-r.show{display:block;color:var(--green)}
+.blank-inp{display:inline-block;border:none;border-bottom:1.5px solid var(--green);background:transparent;font-size:13.5px;font-family:var(--sans);color:var(--green);width:120px;text-align:center;padding:0 4px;outline:none;transition:border-color .2s}
+.blank-inp.ok-b{border-bottom-color:#3ddc6e;color:var(--green)}
+.blank-inp.no-b{border-bottom-color:var(--red);color:var(--red)}
+.blank-sent{font-size:14px;color:var(--w2);line-height:2.4;margin-bottom:.9rem}
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin:1rem 0}
+.match-col h5{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--w3);margin-bottom:9px}
+.mi{padding:9px 13px;border:1px solid var(--border);font-size:13px;margin-bottom:7px;cursor:none;transition:all .2s;color:var(--w2);background:var(--bg3)}
+.mi:hover{border-color:var(--border2);background:var(--bg2);color:var(--white)}
+.mi.sel{border-color:var(--green);background:rgba(61,220,110,.07);color:var(--green)}
+.mi.matched{border-color:#2a7a4a;background:rgba(61,220,110,.08);color:var(--green);cursor:default}
+.mi.wmatch{border-color:var(--red);background:rgba(224,85,85,.07);animation:shake .3s}
+.match-score{text-align:center;font-family:var(--mono);font-size:12px;color:var(--green);margin-top:.6rem;font-weight:500}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .hero{grid-template-columns:1fr;padding:6.5rem 1.5rem 3rem;gap:2rem}
+  .hero-right{display:none}
+  .feat-grid{grid-template-columns:1fr}
+  .topics-grid,.app-topic-grid{grid-template-columns:1fr}
+  .lp-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  section{padding:4rem 1.5rem}
+  .opts{grid-template-columns:1fr}
+  .match-wrap{grid-template-columns:1fr}
+  footer{flex-direction:column;align-items:flex-start}
+  .app-section{padding:1.8rem 1rem}
+  .tab-c{padding:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- ═══════════════ LANDING PAGE ═══════════════ -->
+<div id="landing">
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="logo">Bio<span>Mazic</span></a>
+  <ul class="nav-links">
+    <li><a href="#topics-sec">Topics</a></li>
+    <li><a href="#preview">Lectures</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-cta" onclick="launchApp()">Launch Platform ↗</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-left">
+    <div class="eyebrow">NEET 2025–26 · Class XI &amp; XII Biology</div>
+    <h1 class="hero-h1">
+      <span class="l1">MASTER</span>
+      <span class="l2">BIOLOGY</span>
+      <span class="l3">NEET</span>
+    </h1>
+    <p class="hero-sub">20 cinematic lecture scripts, pro mnemonics, and brain-activating worksheets — engineered for top NEET ranks.</p>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="launchApp()">Open BioMazic Platform ↗</button>
+      <a href="#topics-sec" class="btn-ghost">Browse Topics</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hst-n">20</div><div class="hst-l">Elite Topics</div></div>
+      <div><div class="hst-n">40+</div><div class="hst-l">Worksheets</div></div>
+      <div><div class="hst-n">360</div><div class="hst-l">NEET Marks</div></div>
+      <div><div class="hst-n">100%</div><div class="hst-l">NCERT Based</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="mol-wrap">
+      <div class="chip">DNA_replication.active</div>
+      <div class="chip">photosynthesis.C3_cycle</div>
+      <div class="chip">meiosis.prophase_I</div>
+      <div class="chip">ecosystem.10_percent_law</div>
+      <svg width="320" height="500" viewBox="0 0 320 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3ddc6e" stop-opacity=".25"/><stop offset="100%" stop-color="#3ddc6e" stop-opacity="0"/></radialGradient></defs>
+        <ellipse cx="160" cy="250" rx="110" ry="175" fill="url(#g1)"/>
+        <path d="M100 70 Q165 115 100 165 Q35 210 100 255 Q165 300 100 345 Q35 390 100 435 Q165 478 100 500" stroke="#3ddc6e" stroke-width="1.5" fill="none" opacity=".55"/>
+        <path d="M220 70 Q155 115 220 165 Q285 210 220 255 Q155 300 220 345 Q285 390 220 435 Q155 478 220 500" stroke="#3ddc6e" stroke-width="1.5" fill="none" opacity=".55"/>
+        <line x1="100" y1="115" x2="220" y2="115" stroke="#1e4a2a" stroke-width="1"/><line x1="78" y1="152" x2="242" y2="152" stroke="#1e4a2a" stroke-width="1"/>
+        <line x1="100" y1="200" x2="220" y2="200" stroke="#1e4a2a" stroke-width="1"/><line x1="78" y1="245" x2="242" y2="245" stroke="#2a5a3a" stroke-width="1.5"/>
+        <line x1="100" y1="290" x2="220" y2="290" stroke="#1e4a2a" stroke-width="1"/><line x1="78" y1="332" x2="242" y2="332" stroke="#1e4a2a" stroke-width="1"/>
+        <line x1="100" y1="380" x2="220" y2="380" stroke="#1e4a2a" stroke-width="1"/><line x1="78" y1="418" x2="242" y2="418" stroke="#2a5a3a" stroke-width="1.5"/>
+        <circle cx="100" cy="115" r="4" fill="#3ddc6e" opacity=".8"/><circle cx="220" cy="115" r="4" fill="#3ddc6e" opacity=".8"/>
+        <circle cx="78" cy="245" r="5" fill="#3ddc6e"/><circle cx="242" cy="245" r="5" fill="#3ddc6e"/>
+        <circle cx="78" cy="418" r="5" fill="#f0c040"/><circle cx="242" cy="418" r="5" fill="#f0c040"/>
+        <circle cx="100" cy="380" r="4" fill="#3ddc6e" opacity=".7"/><circle cx="220" cy="380" r="4" fill="#3ddc6e" opacity=".7"/>
+        <text x="44" y="250" font-family="DM Mono" font-size="9" fill="#3ddc6e" opacity=".7">A—T</text>
+        <text x="250" y="250" font-family="DM Mono" font-size="9" fill="#3ddc6e" opacity=".7">G≡C</text>
+        <text x="44" y="423" font-family="DM Mono" font-size="9" fill="#f0c040" opacity=".8">5'→3'</text>
+        <text x="248" y="423" font-family="DM Mono" font-size="9" fill="#f0c040" opacity=".8">3'→5'</text>
+        <circle cx="160" cy="250" r="5" fill="#3ddc6e">
+          <animate attributeName="r" values="5;11;5" dur="2.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values=".8;0;.8" dur="2.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="160" cy="250" r="3.5" fill="#3ddc6e"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-t">&nbsp;&nbsp;CELL BIOLOGY &nbsp;•&nbsp; GENETICS &nbsp;•&nbsp; PHOTOSYNTHESIS &nbsp;•&nbsp; EVOLUTION &nbsp;•&nbsp; ECOSYSTEM &nbsp;•&nbsp; MOLECULAR BIOLOGY &nbsp;•&nbsp; REPRODUCTION &nbsp;•&nbsp; BIOTECHNOLOGY &nbsp;•&nbsp; HUMAN PHYSIOLOGY &nbsp;•&nbsp; BIODIVERSITY &nbsp;•&nbsp; CELL DIVISION &nbsp;•&nbsp; RESPIRATION &nbsp;•&nbsp; MINERAL NUTRITION &nbsp;•&nbsp; BIOMOLECULES &nbsp;•&nbsp; NEURAL CONTROL &nbsp;&nbsp;&nbsp;&nbsp;CELL BIOLOGY &nbsp;•&nbsp; GENETICS &nbsp;•&nbsp; PHOTOSYNTHESIS &nbsp;•&nbsp; EVOLUTION &nbsp;•&nbsp; ECOSYSTEM &nbsp;•&nbsp; MOLECULAR BIOLOGY &nbsp;•&nbsp; REPRODUCTION &nbsp;•&nbsp; BIOTECHNOLOGY &nbsp;•&nbsp; HUMAN PHYSIOLOGY &nbsp;•&nbsp; BIODIVERSITY &nbsp;•&nbsp; CELL DIVISION &nbsp;•&nbsp; RESPIRATION &nbsp;•&nbsp; MINERAL NUTRITION &nbsp;•&nbsp; BIOMOLECULES &nbsp;•&nbsp; NEURAL CONTROL &nbsp;&nbsp;</div></div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="sec-label">Why BioMazic</div>
+  <h2 class="sec-h2 reveal">WHAT MAKES<br><span style="color:var(--green)">THIS DIFFERENT</span></h2>
+  <p class="sec-intro reveal">Not notes. Not PDFs. A complete teaching engine built for NEET top ranks.</p>
+  <div class="feat-grid">
+    <div class="feat-item reveal"><div class="feat-n">01</div><div class="feat-title">Cinematic Lecture Scripts</div><div class="feat-desc">Every lecture opens with a story or question students cannot ignore — then delivers a structured, mnemonic-rich concept breakdown with NEET traps flagged at every turn.</div></div>
+    <div class="feat-item reveal" style="transition-delay:.1s"><div class="feat-n">02</div><div class="feat-title">Pro Mnemonics & Tricks</div><div class="feat-desc">Memory shortcuts, exam traps, and high-yield tips vetted from 10 years of NEET patterns. The kind of edge that separates a 350 from a 720.</div></div>
+    <div class="feat-item reveal" style="transition-delay:.2s"><div class="feat-n">03</div><div class="feat-title">Interactive Worksheets</div><div class="feat-desc">MCQs with instant feedback, column-matching games, fill-in-the-blanks — all self-checking. Active recall, not passive reading.</div></div>
+    <div class="feat-item reveal" style="transition-delay:.05s"><div class="feat-n">04</div><div class="feat-title">20 Most Critical Topics</div><div class="feat-desc">Handpicked from NEET frequency analysis 2015–2024. These 20 topics cover 60–70% of biology questions every single year.</div></div>
+    <div class="feat-item reveal" style="transition-delay:.15s"><div class="feat-n">05</div><div class="feat-title">100% NCERT Aligned</div><div class="feat-desc">Every fact maps directly to NCERT Class XI & XII. No outside sources. No confusion. Clean, curriculum-perfect content.</div></div>
+    <div class="feat-item reveal" style="transition-delay:.25s"><div class="feat-n">06</div><div class="feat-title">Educator-First Design</div><div class="feat-desc">Scripts are timed, dialogue-ready, and structured to maximise student retention. Built by educators, for educators who want extraordinary classrooms.</div></div>
+  </div>
+</section>
+
+<!-- TOPICS BROWSER -->
+<section class="topics-sec" id="topics-sec">
+  <div class="sec-label">All 20 Topics</div>
+  <h2 class="sec-h2 reveal">THE COMPLETE<br><span style="color:var(--green)">CURRICULUM</span></h2>
+  <p class="sec-intro reveal">Class XI foundations + Class XII mastery. Click any topic card in the platform to open the full lecture + worksheet.</p>
+  <div class="class-toggle reveal">
+    <button class="tog-btn active" id="lb11" onclick="filterLanding('11',this)">Class XI</button>
+    <button class="tog-btn" id="lb12" onclick="filterLanding('12',this)">Class XII</button>
+    <button class="tog-btn" id="lball" onclick="filterLanding('all',this)">All Topics</button>
+  </div>
+  <div class="topics-grid" id="landingGrid"></div>
+</section>
+
+<!-- LECTURE PREVIEW -->
+<section class="lp-sec" id="preview">
+  <div class="lp-grid">
+    <div class="lp-left">
+      <div class="sec-label">Sample Lecture</div>
+      <h2 class="sec-h2 revL">SEE WHAT A<br><span style="color:var(--green)">BIOMAZIC</span><br>LECTURE LOOKS LIKE</h2>
+      <p class="sec-intro revL" style="margin-bottom:1.4rem">Every lecture follows our 4-part framework: Hook → Core Concepts → Fruitful Ending → Pro Trick. Preview from <em>Molecular Basis of Inheritance.</em></p>
+      <div class="revL" style="display:flex;flex-direction:column;gap:10px;transition-delay:.12s">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--w2)"><span style="color:var(--green);font-family:var(--mono)">✓</span> Timed sections (2 min hook, 20–25 min core)</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--w2)"><span style="color:var(--green);font-family:var(--mono)">✓</span> Embedded NEET trap warnings in red</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--w2)"><span style="color:var(--green);font-family:var(--mono)">✓</span> Exact educator dialogue, ready to deliver</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--w2)"><span style="color:var(--green);font-family:var(--mono)">✓</span> Board-writing cues and analogy triggers</div>
+        <div style="margin-top:1rem"><button class="btn-g" onclick="launchApp()" style="font-size:12px;padding:.7rem 1.6rem">Open Full Platform ↗</button></div>
+      </div>
+    </div>
+    <div class="lp-card reveal" style="transition-delay:.15s">
+      <div class="lp-head"><div class="lp-ico">🧬</div><div><div class="lp-ht">Topic 12 — Molecular Basis of Inheritance</div><div class="lp-hs">Class XII · Genetics · Hard</div></div></div>
+      <div class="lp-row"><div class="lp-lbl">The Hook — 2 min</div><div class="lp-txt">"In 1953, Watson and Crick stared at an X-ray photo taken by Rosalind Franklin — and in that moment, understood the secret of life. Today you will understand what they saw — and why it changed everything."</div></div>
+      <div class="lp-row"><div class="lp-lbl">Core Concept — DNA Structure</div><div class="lp-txt">Right-handed B-form double helix. Antiparallel strands. A=T (2 H-bonds), G≡C (3 H-bonds). Width = 2nm, Pitch = 3.4nm, 10 bp per turn, rise per bp = 0.34nm.</div><div class="lp-trap">⚠ NEET TRAP: Pitch (3.4nm) ≠ Width (2nm) ≠ Rise per bp (0.34nm). All three tested separately every year.</div></div>
+      <div class="lp-row"><div class="lp-lbl">Pro Trick</div><div class="lp-tip">"UAA = U-Are-Away (Ochre). UAG = U-Are-Gone (Amber). UGA = U-Go-Away (Opal). Never forget all three stop codons again."</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-sec" id="testimonials">
+  <div class="sec-label">Results</div>
+  <h2 class="sec-h2 reveal">EDUCATORS &amp;<br><span style="color:var(--green)">STUDENTS SPEAK</span></h2>
+  <p class="sec-intro reveal">From classrooms across India. Real results, real stories.</p>
+  <div class="testi-grid">
+    <div class="tcard reveal"><div class="ttext">"After using these scripts, my students stopped forgetting Prophase-I sub-stages. The 'Lazy Zebras' mnemonic — they still quote it in exams two years later."</div><div class="tauth"><div class="tav">RS</div><div><div class="tname">Rajesh Sharma</div><div class="tscore">Biology Educator · Kota · 14 yrs</div></div></div></div>
+    <div class="tcard reveal" style="transition-delay:.1s"><div class="ttext">"The hooks are incredible. I teach in a small town and engagement was always a problem. These lecture openings changed the energy in my classroom completely."</div><div class="tauth"><div class="tav">PM</div><div><div class="tname">Priya Mehta</div><div class="tscore">NEET Tutor · Indore · 8 yrs</div></div></div></div>
+    <div class="tcard reveal" style="transition-delay:.2s"><div class="ttext">"Scored 340/360 in biology in NEET 2024. My teacher used these worksheets every week. The matching games made organelle functions stick forever."</div><div class="tauth"><div class="tav">AK</div><div><div class="tname">Ananya Kumar</div><div class="tscore">NEET 2024 · AIR 847 · Biology 340/360</div></div></div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="price-sec" id="pricing">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="sec-label" style="justify-content:center">Pricing</div>
+    <h2 class="sec-h2 reveal" style="text-align:center">SIMPLE &amp;<br><span style="color:var(--green)">TRANSPARENT</span></h2>
+    <p class="sec-intro reveal" style="margin:0 auto;text-align:center">One time. Full access. No subscriptions.</p>
+  </div>
+  <div class="price-grid">
+    <div class="pcard reveal">
+      <div class="p-plan">Starter</div>
+      <div class="p-amt"><sup>₹</sup>499</div>
+      <div class="p-period">one-time payment</div>
+      <div class="p-div"></div>
+      <ul class="p-feats">
+        <li>5 Class XI lecture scripts</li>
+        <li>5 interactive worksheets</li>
+        <li>PDF download</li>
+        <li class="off">Class XII topics</li>
+        <li class="off">Pro tricks bundle</li>
+        <li class="off">Future updates</li>
+      </ul>
+      <button class="p-btn ghost">Get Starter</button>
+    </div>
+    <div class="pcard featured reveal" style="transition-delay:.1s">
+      <div class="p-plan">Complete</div>
+      <div class="p-amt"><sup>₹</sup>999</div>
+      <div class="p-period">one-time payment</div>
+      <div class="p-div"></div>
+      <ul class="p-feats">
+        <li>All 20 scripts (XI + XII)</li>
+        <li>20 interactive worksheets</li>
+        <li>Full pro tricks bundle</li>
+        <li>Printable PDF worksheet pack</li>
+        <li>NEET frequency analysis chart</li>
+        <li>Free future topic additions</li>
+      </ul>
+      <button class="p-btn" onclick="launchApp()">Get Complete Access</button>
+    </div>
+    <div class="pcard reveal" style="transition-delay:.2s">
+      <div class="p-plan">Institutional</div>
+      <div class="p-amt"><sup>₹</sup>3,999</div>
+      <div class="p-period">per institution / year</div>
+      <div class="p-div"></div>
+      <ul class="p-feats">
+        <li>Everything in Complete</li>
+        <li>Unlimited educator seats</li>
+        <li>Custom branding option</li>
+        <li>WhatsApp support</li>
+        <li>Monthly new topics</li>
+        <li>Student progress tracking</li>
+      </ul>
+      <button class="p-btn ghost">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-sec" id="faq">
+  <div class="sec-label">FAQ</div>
+  <h2 class="sec-h2 reveal">COMMON<br><span style="color:var(--green)">QUESTIONS</span></h2>
+  <div class="faq-wrap">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is this for students or teachers?<span class="faq-icon">+</span></div><div class="faq-a"><p>Primarily designed for educators who want complete, ready-to-deliver lecture scripts. Students can use it for self-study too — all worksheets are interactive and self-checking. Coaching institutes use it to standardise teaching quality across batches.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Which NCERT edition is this based on?<span class="faq-icon">+</span></div><div class="faq-a"><p>All content is based on the latest NCERT Class XI and XII Biology textbooks as per NTA NEET 2025–26 syllabus. Every claim traces directly to NCERT chapters.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How were the 20 topics selected?<span class="faq-icon">+</span></div><div class="faq-a"><p>Based on NEET question frequency analysis (2015–2024), conceptual difficulty as reported by educators and students, and NTA unit-wise marks weightage. These 20 consistently cover 60–70% of biology MCQs.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I print the worksheets?<span class="faq-icon">+</span></div><div class="faq-a"><p>Yes. The Complete and Institutional packages include a printable PDF worksheet pack optimised for A4. The interactive HTML platform also works fully offline after download.</p></div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Will more topics be added?<span class="faq-icon">+</span></div><div class="faq-a"><p>Yes — 10 more topics planned by mid-2025. Complete and Institutional access holders receive all additions at no extra cost.</p></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-ban">
+  <h2>START TEACHING<br>DIFFERENTLY</h2>
+  <p>20 lectures. 20 worksheets. One platform that transforms biology classrooms.</p>
+  <button class="cta-main-btn" onclick="launchApp()">Launch BioMazic Now ↗</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Bio<span>Mazic</span></div>
+  <ul class="f-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#topics-sec">Topics</a></li>
+    <li><a href="#preview">Lectures</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="f-copy">© 2025 BioMazic · NEET Biology Mastery</div>
+</footer>
+
+</div><!-- end #landing -->
+
+<!-- ═══════════════ APP PLATFORM ═══════════════ -->
+<div id="app">
+  <div class="app-header">
+    <div class="app-logo">Bio<span>Mazic</span></div>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <span style="font-family:var(--mono);font-size:10px;color:var(--w3);letter-spacing:.1em">NEET BIOLOGY PLATFORM</span>
+      <button class="back-btn" onclick="goLanding()">← Back to Home</button>
+    </div>
+  </div>
+  <div class="app-tabs">
+    <button class="app-tab active" onclick="showAppTab('xi')">Class XI Topics</button>
+    <button class="app-tab" onclick="showAppTab('xii')">Class XII Topics</button>
+  </div>
+  <div class="app-section active" id="tab-xi">
+    <div class="app-sec-title">Class XI — Core Foundations</div>
+    <div class="app-sec-sub">Click any topic to open the full lecture script + interactive worksheet</div>
+    <div class="app-topic-grid" id="grid11"></div>
+  </div>
+  <div class="app-section" id="tab-xii">
+    <div class="app-sec-title">Class XII — Advanced Concepts</div>
+    <div class="app-sec-sub">Click any topic to open the full lecture script + interactive worksheet</div>
+    <div class="app-topic-grid" id="grid12"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modalOv" onclick="closeModalOv(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-badge">BioMazic Lecture Script</div>
+      <div class="modal-title" id="mTitle">Topic</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchMTab('script',this)">📝 Lecture Script</button>
+      <button class="mtab" onclick="switchMTab('ws',this)">🎯 Activity Sheet</button>
+    </div>
+    <div class="mtab-body">
+      <div class="tab-c active" id="tab-script"></div>
+      <div class="tab-c" id="tab-ws"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   CURSOR
+══════════════════════════════════ */
+const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+  setTimeout(()=>{curR.style.left=e.clientX+'px';curR.style.top=e.clientY+'px'},85);
+});
+document.querySelectorAll('a,button,.tc,.atc,.mi,.opt,.faq-q').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
+});
+
+/* ══════════════════════════════════
+   NAV SCROLL
+══════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ══════════════════════════════════
+   REVEAL ANIMATIONS
+══════════════════════════════════ */
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.08});
+document.querySelectorAll('.reveal,.revL').forEach(el=>obs.observe(el));
+
+/* ══════════════════════════════════
+   FAQ
+══════════════════════════════════ */
+function toggleFaq(el){el.parentElement.classList.toggle('open')}
+
+/* ══════════════════════════════════
+   TOPIC DATA
+══════════════════════════════════ */
+const T11=[
+{num:'01',title:'Cell: The Unit of Life',sub:'Prokaryotic vs eukaryotic, organelles, cell theory',tags:['Cell Biology'],diff:'Hard',accent:'#c84020',
+ script:{
+  hook:`<p>Start with this story: <em>"In 1665, Robert Hooke looked at a slice of cork under his microscope and saw tiny boxes. He called them 'cells' — after monks' small rooms. He had NO idea he was looking at dead cell walls."</em></p><div class="say">"Class — raise your hand if you think a single cell can breathe, eat, reproduce, and die. ALL of that? Yes — and today we'll understand exactly how."</div><p>Draw a BIG cell on the board. Write: <strong>THE CELL CITY</strong> — every organelle = a city department.</p>`,
+  concept:`<p><strong>Key Framework: THE CELL CITY ANALOGY</strong></p><p>🏛️ <em>Nucleus = Mayor's Office</em> — controls everything, holds DNA (master blueprint). Has nuclear envelope with nuclear pores.</p><p>⚡ <em>Mitochondria = Power Plant</em> — produces ATP via cellular respiration. Has 70S ribosomes (endosymbiotic origin).</p><p>🏭 <em>Ribosome = Factory</em> — smallest organelle. Makes ALL proteins. Present in BOTH prokaryotes AND eukaryotes.</p><p>📦 <em>Golgi Apparatus = Post Office</em> — modifies, packages, sends proteins. Formed by flattened sacs (cisternae).</p><p>🌊 <em>ER = Road Network</em> — Rough ER (ribosomes) = protein highway. Smooth ER = lipid synthesis + detox.</p><p>♻️ <em>Lysosome = Recycling Centre</em> — "suicide bags" (de Duve). Contains acid hydrolases. pH ≈ 4.8.</p><div class="neet-trap"><div class="trap-l">⚠ NEET Trap</div><p>Ribosomes are 70S in prokaryotes (50S + 30S) and 80S in eukaryotes (60S + 40S). Mitochondrial ribosomes = 70S — proves endosymbiotic theory! Ribosomes = ONLY organelle in BOTH pro & eukaryotes.</p></div><p><strong>Prokaryote vs Eukaryote:</strong> Prokaryote = no nuclear membrane, no membrane-bound organelles. Mycoplasma = smallest living cell. Ostrich egg = largest cell.</p>`,
+  end:`<div class="say">"Every time your muscle contracts, your ribosomes are busy making proteins. The cell never sleeps — it's a city running 24/7. You are made of 37 trillion of these cities working in perfect harmony."</div>`,
+  trick:`<strong>NEET Mnemonic — Non-membranous structures:</strong> "GERMANY" = <strong>G</strong>ranules, <strong>E</strong>ndosome, <strong>R</strong>ibosome, <strong>M</strong>icrotubules, <strong>A</strong>ctin filaments, <strong>N</strong>ucleolus, <strong>Y</strong>(centriole). Most tested fact: Ribosomes present in BOTH prokaryotes and eukaryotes. Lysosome = "suicide bags" (de Duve) = always asked!`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Which organelle is the "powerhouse" of the cell?',o:['Nucleus','Mitochondria','Ribosome','Golgi body'],a:1},
+      {q:'70S ribosomes are found in:',o:['Eukaryotic cytoplasm','Prokaryotes & mitochondria','Only chloroplasts','Nucleus'],a:1},
+      {q:'Which organelle is absent in prokaryotes?',o:['Ribosome','Cell wall','Mitochondria','Plasma membrane'],a:2},
+      {q:'Lysosomes were discovered by:',o:['Robert Hooke','de Duve','Schleiden','Virchow'],a:1}],
+  mL:['Nucleus','Ribosome','Mitochondria','Lysosome','Golgi body'],
+  mR:['ATP production','Suicide bags','Protein synthesis','Post office function','Genetic control'],
+  mA:[4,2,0,1,3]}
+},
+{num:'02',title:'Biomolecules',sub:'Carbohydrates, proteins, lipids, nucleic acids',tags:['Biochemistry'],diff:'Hard',accent:'#1a4fc8',
+ script:{
+  hook:`<p>Ask: <em>"What do a cotton shirt, sugarcane stalk, your DNA, and cooking oil have in common?"</em> Wait 10 seconds. Then reveal: <em>"They're ALL biomolecules — the four families of life's chemistry."</em></p><div class="say">"In NEET, biomolecules = 5–7 questions GUARANTEED every single year. Today we master it with a system."</div>`,
+  concept:`<p>🍬 <strong>Carbohydrates</strong> — C:H:O = 1:2:1 ratio. Monosaccharides (glucose, fructose). Disaccharides (sucrose = glucose + fructose via glycosidic bond). Polysaccharides: Starch (plant energy store), Glycogen (animal energy store), Cellulose (structural, plant cell wall), Chitin (fungal cell wall + arthropod exoskeleton).</p><p>🔗 <strong>Proteins</strong> — 20 amino acid types. Joined by peptide bonds. 4 levels: Primary (sequence) → Secondary (α-helix, β-sheet via H-bonds) → Tertiary (3D shape) → Quaternary (multiple polypeptides).</p><div class="neet-trap"><div class="trap-l">⚠ NEET High-Yield</div><p>Insulin = first protein sequenced (Sanger, 1953). Haemoglobin = quaternary protein (2α + 2β chains). Collagen = most abundant protein in human body.</p></div><p>🧈 <strong>Lipids</strong> — NOT polymers. Glycerol + fatty acids. Saturated = no double bond. Unsaturated = has double bonds. Phospholipids = cell membrane bilayer. Steroids derived from cholesterol.</p><p>🧬 <strong>Nucleic Acids</strong> — Nucleotide = Phosphate + Sugar + Nitrogenous base. DNA (deoxyribose, double-stranded). RNA (ribose, single-stranded, U replaces T). Purines: A, G (2 rings). Pyrimidines: C, T, U (1 ring).</p>`,
+  end:`<div class="say">"When you eat a roti, you break polysaccharides. When you run, ATP from lipid oxidation kicks in. When you think, neurotransmitters — proteins — fire. Biomolecules are not just a chapter. They are you."</div>`,
+  trick:`<strong>Purine vs Pyrimidine:</strong> "Pure As Gold" = <strong>Pur</strong>ines are <strong>A</strong>denine & <strong>G</strong>uanine (2 rings, bigger). "CUT the Py" = Pyrimidines are <strong>C</strong>ytosine, <strong>U</strong>racil, <strong>T</strong>hymine (1 ring). A=T (2 H-bonds), G≡C (3 H-bonds) — more GC pairs = more stable DNA. Remember: Chitin in FUNGI cell wall (not cellulose)!`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'Sucrose is a disaccharide made of glucose and ___.', a:'fructose'},
+      {t:'The bond that joins amino acids is called the ___ bond.', a:'peptide'},
+      {t:'Haemoglobin is an example of the ___ structure level of proteins.', a:'quaternary'},
+      {t:'Chitin is found in the cell wall of ___ and exoskeleton of arthropods.', a:'fungi'},
+      {t:'Purines have ___ rings while pyrimidines have one ring.', a:'two'}]}
+},
+{num:'03',title:'Cell Division',sub:'Mitosis, meiosis phases, cell cycle regulation',tags:['Cell Biology'],diff:'Hard',accent:'#1a8a3f',
+ script:{
+  hook:`<p>Ask: <em>"Your skin replaces itself every 27 days. Your gut lining every 5 days. How? Cell division. But here's the twist — if cell division goes wrong, what happens?"</em> Students: Cancer. <em>"Exactly. Mitosis gone rogue = tumour. Understanding this chapter = understanding cancer itself."</em></p>`,
+  concept:`<p><strong>Cell Cycle:</strong> G1 (8–10 hrs, growth) → S Phase (6–8 hrs, DNA replication) → G2 (4–6 hrs, prep) → M Phase (1 hr, mitosis). Interphase = G1+S+G2 = 90% of cycle time.</p><p><strong>Mitosis (PMAT):</strong></p><p>🔵 <em>Prophase:</em> Chromatin condenses, nucleolus disappears, spindle forms from centrioles.</p><p>🟡 <em>Metaphase:</em> Chromosomes align at equatorial plate — BEST stage to count chromosomes!</p><p>🟢 <em>Anaphase:</em> Centromere splits, sister chromatids separate → each becomes a chromosome.</p><p>🔴 <em>Telophase:</em> Nuclear envelope reforms, nucleolus reappears, cytokinesis follows.</p><div class="neet-trap"><div class="trap-l">⚠ Critical NEET Facts</div><p>Meiosis I = reductional division (2n→n). Meiosis II = equational (like mitosis). Crossing over occurs in Prophase I, Pachytene sub-stage. Chiasmata visible in Diplotene.</p></div><p><strong>Prophase I sub-stages (LZPDD):</strong> Leptotene → Zygotene (synapsis, bivalent forms) → Pachytene (crossing over at chiasmata) → Diplotene (chiasmata visible, bivalents repel) → Diakinesis (terminalization, nuclear envelope breaks).</p>`,
+  end:`<div class="say">"Every second, 3.8 million cells divide in your body. Each one goes through this precise choreography. One mistake in a checkpoint protein = cancer. This is why cell division is perhaps the most clinically important chapter in all of biology."</div>`,
+  trick:`<strong>Prophase I Mnemonic:</strong> "Lazy Zebras Play During Dusk" = <strong>L</strong>eptotene, <strong>Z</strong>ygotene, <strong>P</strong>achytene, <strong>D</strong>iplotene, <strong>D</strong>iakinesis. Extra: Best stage to count chromosomes = ALWAYS Metaphase. DNA content: G1=2C, after S=4C, after mitosis=2C each cell.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Crossing over occurs in which sub-stage of Prophase I?',o:['Leptotene','Zygotene','Pachytene','Diplotene'],a:2},
+      {q:'Best stage to count chromosomes:',o:['Anaphase','Metaphase','Prophase','Telophase'],a:1},
+      {q:'Meiosis I is called:',o:['Equational division','Reductional division','Mitotic division','Neither'],a:1},
+      {q:'DNA replication occurs in:',o:['G1 phase','S phase','G2 phase','M phase'],a:1}],
+  mL:['Leptotene','Pachytene','Diplotene','Diakinesis','Metaphase'],
+  mR:['Terminalization','Bivalents at equatorial plate','Chromosomes first appear thin','Crossing over occurs','Chiasmata visible'],
+  mA:[2,3,4,0,1]}
+},
+{num:'04',title:'Photosynthesis',sub:'Light reactions, Calvin cycle, C3/C4/CAM plants',tags:['Plant Physiology'],diff:'Hard',accent:'#1a8a3f',
+ script:{
+  hook:`<p>Ask: <em>"Every bite of food you have ever eaten traced back to a plant. Every single one. Plants are the ONLY beings on Earth that make food from thin air, water, and sunlight. Let's understand this miracle."</em></p><div class="say">"Here's a challenge: Why are leaves green? The answer lies right here in this chapter."</div>`,
+  concept:`<p>☀️ <strong>Light Reactions (Thylakoid membrane):</strong> Z-scheme — water splitting at PS-II (P680) → electrons flow → PS-I (P700) → NADPH formed. Photophosphorylation: Cyclic (only PS-I, only ATP); Non-cyclic (both PS, produces ATP + NADPH + O₂). O₂ released from water splitting.</p><p>🌿 <strong>Calvin Cycle / C3 (Stroma):</strong> CO₂ fixed by RuBisCO onto RuBP (5C) → 3-PGA (first stable product, 3C). 3 turns → 1 G3P. Needs: 3CO₂ + 9ATP + 6NADPH.</p><div class="neet-trap"><div class="trap-l">⚠ C3 vs C4 vs CAM</div><p>C3 plants: First product = 3-PGA (3C). C4 plants (maize, sugarcane): First product = OAA (4C), Hatch-Slack pathway, bundle sheath + mesophyll cells, NO photorespiration. CAM plants (succulents): stomata open at NIGHT to fix CO₂.</p></div><p>📊 <strong>Spectra:</strong> Absorption spectrum = wavelengths absorbed by pigments. Action spectrum = photosynthesis rate vs wavelength. Both peak at red (680nm) and blue (450nm). Emerson Enhancement Effect proves two photosystems exist.</p>`,
+  end:`<div class="say">"Leaves are green because chlorophyll REFLECTS green and absorbs red and blue. The oxygen in this room was made by a plant. Photosynthesis is not just a chapter — it is the breath of our entire planet."</div>`,
+  trick:`<strong>PS-II BEFORE PS-I in Z-scheme:</strong> They're numbered by discovery, not function! Remember: "PS-II acts FIRST, PS-I acts SECOND in the Z-scheme." For C4: "CORN is C4" — maize is always the example. RuBisCO = most abundant enzyme on Earth AND the key enzyme of Calvin cycle.`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'The first stable product of the C3 photosynthesis pathway is ___.',a:'3-PGA'},
+      {t:'PS-II contains the reaction centre pigment P___ nm.',a:'680'},
+      {t:'In cyclic photophosphorylation, only ___ is produced.',a:'ATP'},
+      {t:'Bundle sheath cells are a feature of ___ plants.',a:'C4'},
+      {t:'The enzyme that fixes CO₂ in the Calvin cycle is ___.',a:'RuBisCO'}]}
+},
+{num:'05',title:'Respiration in Plants',sub:'Glycolysis, Krebs cycle, ETC, fermentation, RQ',tags:['Plant Physiology'],diff:'Medium',accent:'#c9891a',
+ script:{
+  hook:`<p>Ask: <em>"You eat a glucose tablet before a race. What happens to that glucose inside your cells? Let's trace it — it's a detective story of energy extraction, step by step."</em></p>`,
+  concept:`<p><strong>Pathway Summary:</strong> Glucose (6C) → <em>Glycolysis (cytoplasm)</em> → Pyruvate (3C) → <em>Link reaction</em> → Acetyl CoA (2C) → <em>Krebs Cycle (mitochondrial matrix)</em> → NADH, FADH₂ → <em>ETC (inner mitochondrial membrane)</em> → ATP.</p><p>🔢 <strong>ATP Yield per glucose:</strong> Glycolysis = 2 net ATP + 2 NADH. Link reaction = 2 NADH. Krebs (×2) = 2 ATP + 6 NADH + 2 FADH₂. ETC = ~32–34 ATP. Total ≈ 36–38 ATP.</p><div class="neet-trap"><div class="trap-l">⚠ NEET Trap — RQ Values</div><p>Respiratory Quotient (RQ) = CO₂ released ÷ O₂ consumed. Carbohydrates: RQ = 1. Fats: RQ less than 1 (0.7). Proteins: RQ greater than 1. Organic acids: RQ more than 1.</p></div><p>🍞 <strong>Fermentation (Anaerobic):</strong> Yeast = ethanol + CO₂. Muscle = lactic acid. Only 2 ATP net. Substrate-level phosphorylation in glycolysis + Krebs. Oxidative phosphorylation in ETC via chemiosmosis (Mitchell's hypothesis).</p>`,
+  end:`<div class="say">"One glucose molecule, traced through three stages, yields 36–38 ATP. That's the energy economy of life. Next time you feel tired, remember — your mitochondria are working overtime."</div>`,
+  trick:`<strong>Krebs Cycle Trick:</strong> "Can I Keep Selling Sex For Money?" = Citrate, Isocitrate, α-Ketoglutarate, Succinyl-CoA, Succinate, Fumarate, Malate, Oxaloacetate. Key: Glycolysis = CYTOPLASM. Everything else = MITOCHONDRIA. Substrate-level ATP = made directly. Oxidative ATP = via proton gradient.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Glycolysis occurs in:',o:['Mitochondria','Cytoplasm','Nucleus','Chloroplast'],a:1},
+      {q:'RQ for fats is approximately:',o:['Equal to 1','Greater than 1','Less than 1 (0.7)','Zero'],a:2},
+      {q:'Net ATP from glycolysis:',o:['4','2','38','8'],a:1},
+      {q:'Fermentation in yeast produces:',o:['Lactic acid','Ethanol + CO₂','Only CO₂','Pyruvate'],a:1}],
+  mL:['Glycolysis','Krebs cycle','ETC','Fermentation','Chemiosmosis'],
+  mR:['Inner mitochondrial membrane','Anaerobic, 2 ATP only','Proton gradient → ATP','Cytoplasm location','Mitochondrial matrix'],
+  mA:[3,4,0,1,2]}
+},
+{num:'06',title:'Mineral Nutrition',sub:'Essential elements, deficiency symptoms, N-fixation',tags:['Plant Physiology'],diff:'Medium',accent:'#1a4fc8',
+ script:{
+  hook:`<p>Ask: <em>"A farmer's crop turns yellow even with plenty of water and sunlight. A child has stunted growth despite eating well. The answer to BOTH — mineral nutrition."</em></p>`,
+  concept:`<p><strong>Essential Element Criteria (Arnon & Stout):</strong> (1) Deficiency = plant can't complete lifecycle. (2) Cannot be replaced by another element. (3) Direct role in metabolism.</p><p>📊 <strong>Macro vs Micro:</strong> Macronutrients (C, H, O, N, P, K, Ca, Mg, S) = needed in large amounts. Micronutrients/Trace (Fe, Mn, Cu, Zn, Mo, B, Cl, Ni) = tiny amounts but critical.</p><div class="neet-trap"><div class="trap-l">⚠ High-Yield Deficiency Symptoms</div><p>N deficiency = chlorosis in OLD leaves (mobile element). Fe deficiency = chlorosis in YOUNG leaves (immobile). Ca deficiency = tip burn. B deficiency = death of meristems. Mo deficiency = whiptail in cauliflower. Mn deficiency = grey speck disease.</p></div><p>🔄 <strong>Nitrogen Fixation:</strong> N₂ → NH₃ by nitrogenase enzyme. Biological N-fixation: Rhizobium (symbiotic, root nodules of legumes), Azotobacter (free-living aerobe). Leg-haemoglobin = O₂ scavenger in nodules — PINK colour. Protects nitrogenase from O₂ damage.</p>`,
+  end:`<div class="say">"Seventeen elements. That's all life needs from minerals. Farmers spend billions ensuring crops have them. Doctors check blood levels for them. Minerals are the silent architects of all biology."</div>`,
+  trick:`<strong>Mobile vs Immobile Elements:</strong> Mobile elements (deficiency shows in OLD leaves first) = N, P, K, Mg. Immobile (deficiency in YOUNG leaves) = Ca, Fe, S, B. Memory: "Young people are IMMOBILE!" Nitrogenase is irreversibly inactivated by O₂ — that's why leg-haemoglobin must scavenge O₂ inside root nodules.`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'The enzyme nitrogenase is protected from O₂ by ___.',a:'leg-haemoglobin'},
+      {t:'Deficiency of ___ causes whiptail disease in cauliflower.',a:'molybdenum'},
+      {t:'Mobile elements show deficiency symptoms in ___ leaves first.',a:'older'},
+      {t:'Rhizobium forms symbiotic association with ___ plants.',a:'leguminous'},
+      {t:'Boron deficiency causes death of ___.',a:'meristems'}]}
+},
+{num:'07',title:'Structural Organisation in Animals',sub:'Epithelial, connective, muscle, neural tissues',tags:['Animal Biology'],diff:'Medium',accent:'#9a1ac8',
+ script:{
+  hook:`<p>Ask: <em>"Your skin protects you. Your heart pumps. Your neurons think. Your bones support you. ALL of this achieved with just FOUR types of tissue. Nature's elegant minimalism."</em></p>`,
+  concept:`<p>🧱 <strong>Epithelial Tissue:</strong> Covers body surfaces, lines cavities and organs. Tight junctions hold cells. Types by shape: Squamous (flat, alveoli), Cuboidal (kidney tubules), Columnar (intestinal lining, with goblet cells), Ciliated (respiratory tract). Glandular epithelium = forms glands.</p><p>🕸️ <strong>Connective Tissue:</strong> Most abundant tissue. Has cells + fibres + matrix. Loose CT (Areolar = most widely distributed, has mast cells + macrophages). Dense CT: Tendons (muscle to bone), Ligaments (bone to bone). Specialised: Cartilage (chondrocytes, no blood supply), Bone (osteocytes), Blood (fluid matrix = plasma).</p><div class="neet-trap"><div class="trap-l">⚠ NEET Trap</div><p>Blood IS a connective tissue (fluid matrix). Tendon = muscle to BONE. Ligament = BONE to bone. Most widely distributed CT = Areolar tissue. Cartilage has NO blood supply (avascular).</p></div><p>💪 <strong>Muscle Tissue:</strong> Skeletal (striated, voluntary). Smooth (non-striated, involuntary, visceral organs). Cardiac (striated, involuntary, only in heart, has intercalated discs for synchrony).</p><p>⚡ <strong>Neural Tissue:</strong> Neurons (cyton + dendrites + axon) + Neuroglia. Myelin sheath = Schwann cells. Nodes of Ranvier = gaps in myelin for saltatory conduction.</p>`,
+  end:`<div class="say">"Four tissues. That's all it takes to build 37 trillion cells working in symphony. Epithelium protects, connective binds, muscle moves, nerve controls — together they are you."</div>`,
+  trick:`<strong>Tendon vs Ligament:</strong> "TenBone-to-Muscle" = Tendon (T = Tough, muscle to bone). "LigBone-to-Bone" = Ligament (L = Linking two bones). Blood as connective tissue = always tested! Intercalated discs = ONLY in cardiac muscle. Never in skeletal. This distinction appears in MCQs every year.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Which tissue connects muscle to bone?',o:['Ligament','Tendon','Cartilage','Areolar'],a:1},
+      {q:'Intercalated discs are found in:',o:['Skeletal muscle','Smooth muscle','Cardiac muscle','Neural tissue'],a:2},
+      {q:'Most widely distributed connective tissue:',o:['Bone','Blood','Areolar tissue','Dense CT'],a:2},
+      {q:'Myelin sheath is produced by:',o:['Neurons','Schwann cells','Oligodendrocytes','Astrocytes'],a:1}],
+  mL:['Squamous epithelium','Columnar epithelium','Cuboidal epithelium','Areolar tissue','Cardiac muscle'],
+  mR:['Kidney tubules','Intercalated discs','Alveoli/scales','Most distributed CT','Intestinal lining'],
+  mA:[2,4,0,3,1]}
+},
+{num:'08',title:'Digestion & Absorption',sub:'GI tract enzymes, absorption, liver functions',tags:['Human Physiology'],diff:'Hard',accent:'#c9891a',
+ script:{
+  hook:`<p>Open with: <em>"You ate a samosa. From the moment it touched your tongue to when its energy powered your brain cells — it went on a 30-foot, 24-hour journey. Today we trace that journey molecule by molecule."</em></p>`,
+  concept:`<p>🦷 <strong>Mouth:</strong> Salivary amylase (ptyalin) digests starch → maltose. Mucin lubricates. Lysozyme = antibacterial.</p><p>🍽️ <strong>Stomach:</strong> HCl (pH 1.8) — activates pepsinogen → pepsin, kills bacteria. Pepsin digests proteins. Rennin (infants) digests milk protein. Gastric lipase = minor fat digestion.</p><p>🫁 <strong>Small Intestine:</strong> Duodenum receives bile from liver (via gallbladder) — emulsifies fat. NO enzyme in bile. Pancreatic juice: trypsinogen → trypsin (activated by enterokinase/enteropeptidase). Also: pancreatic amylase, lipase. Intestinal juice: maltase, lactase, sucrase, dipeptidases.</p><div class="neet-trap"><div class="trap-l">⚠ NEET High-Yield</div><p>Enterokinase activates trypsinogen → trypsin → then trypsin activates all other pancreatic zymogens (cascade). Bile has NO enzymes — only bile salts for emulsification. Absorption: Monosaccharides + amino acids → blood capillaries → portal vein → liver. Fatty acids + glycerol → lacteals (lymph) → blood via thoracic duct.</p></div><p>🔽 <strong>Large Intestine:</strong> Absorbs water + electrolytes. Bacteria synthesise Vit K and Vit B₁₂. No digestive enzymes secreted.</p>`,
+  end:`<div class="say">"Carbohydrates → glucose → blood. Proteins → amino acids → liver. Fats → fatty acids → lymph. 30 feet, 24 hours, zero waste. Your digestive system is the most perfect recycling machine ever engineered."</div>`,
+  trick:`<strong>Bile Trap:</strong> Bile EMULSIFIES fat (increases surface area for lipase action) but has NO enzymes. Always tested! Cascade: Enterokinase → Trypsin → activates Chymotrypsinogen, Proelastase, Procarboxypeptidase. Fatty acids go to LYMPH (lacteals) not directly to blood — asked every year. Liver makes bile; gallbladder stores and releases it.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Which enzyme activates trypsinogen to trypsin?',o:['Pepsin','Renin','Enterokinase','HCl'],a:2},
+      {q:'Bile is secreted by which organ?',o:['Pancreas','Gallbladder','Liver','Stomach'],a:2},
+      {q:'Fatty acids and glycerol are absorbed via:',o:['Blood capillaries','Lacteals','Portal vein','Hepatic vein'],a:1},
+      {q:'Vitamin K is synthesised in:',o:['Liver','Small intestine','Large intestine','Pancreas'],a:2}],
+  mL:['Salivary amylase','Pepsin','Trypsin','Pancreatic lipase','Bile'],
+  mR:['Fat emulsification (no enzyme)','Starch → maltose','Protein → peptides','Fat → fatty acids + glycerol','Protein → polypeptides'],
+  mA:[1,4,2,3,0]}
+},
+{num:'09',title:'Breathing & Exchange of Gases',sub:'Lung volumes, O₂ transport, Bohr effect, CO₂',tags:['Human Physiology'],diff:'Medium',accent:'#1a4fc8',
+ script:{
+  hook:`<p>Ask: <em>"You are breathing right now — 12–16 times per minute, every minute, every day, without a single conscious thought. But what is ACTUALLY happening at the molecular level in your lungs? Today we go microscopic."</em></p>`,
+  concept:`<p>🫁 <strong>Lung Volumes (NEET Favourite):</strong> TV (Tidal Volume) = 500 mL. IRV (Inspiratory Reserve) = 3000 mL. ERV (Expiratory Reserve) = 1000 mL. RV (Residual Volume) = 1100 mL (cannot exhale). Vital Capacity = IRV + TV + ERV = 4500 mL. Total Lung Capacity = VC + RV = 5800 mL. FRC = ERV + RV.</p><div class="neet-trap"><div class="trap-l">⚠ O₂ Transport</div><p>97% O₂ carried by haemoglobin as oxyhaemoglobin. 3% dissolved in plasma. Each Hb molecule carries 4 O₂ (one per haem group). Bohr Effect: Increased CO₂ / increased temperature / decreased pH → decreased O₂ affinity of Hb → more O₂ released to active tissues. KEY exam concept.</p></div><p>💨 <strong>CO₂ Transport:</strong> 70% as bicarbonate (HCO₃⁻) in plasma. 23% as carbaminohaemoglobin. 7% dissolved. Haldane effect: oxygenation of Hb promotes CO₂ release (opposite of Bohr).</p><p>🌬️ <strong>Regulation:</strong> Respiratory centre in medulla oblongata. Chemoreceptors detect rise in CO₂ (pCO₂ = strongest stimulus). Hypercapnia → increased breathing rate.</p>`,
+  end:`<div class="say">"500 mL, 16 times a minute, 17,000 times a day. Your lungs never rest. Every breath is a chemical story — oxygen hitching a ride on haemoglobin, CO₂ disguised as bicarbonate ions. Breathe consciously today."</div>`,
+  trick:`<strong>Lung Volumes Trick:</strong> "TV Is Really Excellent" = Tidal (500 mL), IRV (3000), RV (1100), ERV (1000). CRITICAL: RV = cannot exhale = NOT part of Vital Capacity. Bohr Effect = about O₂ RELEASE. Haldane Effect = about CO₂ RELEASE. Both involve CO₂ but opposite mechanics. Medulla oblongata = breathing control centre (vital centre).`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'Tidal volume is approximately ___ mL.',a:'500'},
+      {t:'97% of O₂ is transported by ___.',a:'haemoglobin'},
+      {t:'The ___ effect explains increased O₂ release in high CO₂ / low pH environments.',a:'Bohr'},
+      {t:'CO₂ is mainly transported as ___ in the blood plasma.',a:'bicarbonate'},
+      {t:'Vital capacity = IRV + TV + ___.',a:'ERV'}]}
+},
+{num:'10',title:'Neural Control & Coordination',sub:'Neuron, action potential, synapse, CNS regions',tags:['Human Physiology'],diff:'Hard',accent:'#c8401a',
+ script:{
+  hook:`<p>Begin: <em>"86 billion neurons in your brain are firing right now. Each connected to up to 7,000 others. The total synaptic connections in one human brain exceed the number of stars in the Milky Way. Let's understand the fundamental unit of this universe — the neuron."</em></p>`,
+  concept:`<p>⚡ <strong>Neuron Structure:</strong> Dendrites (receive signals) → Cell body/Cyton (integrates) → Axon (transmits) → Synaptic knob (releases neurotransmitter). Myelin sheath (Schwann cells) insulates axon. Nodes of Ranvier = gaps for saltatory conduction (faster).</p><p>🔋 <strong>Action Potential:</strong> Resting potential = −70mV (Na⁺ outside, K⁺ inside). Depolarisation: Na⁺ rushes IN → +40mV. Repolarisation: K⁺ rushes OUT → returns to negative. Refractory period = cannot fire again immediately. All-or-none law = either full AP or none.</p><div class="neet-trap"><div class="trap-l">⚠ NEET Must Know</div><p>Neuromuscular junction (NMJ) = motor neuron + muscle fibre. Acetylcholine = main neurotransmitter at NMJ. Organophosphate poisons block acetylcholinesterase → continuous stimulation. Reflex arc: Receptor → Afferent → Spinal cord (integration) → Efferent → Effector.</p></div><p>🧠 <strong>CNS Regions:</strong> Cerebrum = voluntary actions, intelligence, memory, speech. Cerebellum = balance + coordination. Medulla oblongata = breathing, heart rate, BP (vital centres). Hypothalamus = thermoregulation, hunger, thirst, circadian rhythm. Limbic system = emotions, memory.</p>`,
+  end:`<div class="say">"One neuron. One millisecond. One signal. But 86 billion of them, connected like a cosmic web, make you who you are — your memories, your emotions, your every thought. The neuron is the most sophisticated machine in the known universe."</div>`,
+  trick:`<strong>CNS Function Shortcut:</strong> "Medulla = Maintenance" (vital signs — breathing, HR, BP). "Cerebellum = Coordination" (think: falling, stumbling). "Cerebrum = Cognition." NEET always asks: breathing control = MEDULLA OBLONGATA. Resting membrane potential = −70 mV (Na⁺/K⁺ ATPase maintains gradient). EPSP = excitatory; IPSP = inhibitory postsynaptic potential.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Resting membrane potential of a neuron is:',o:['-70 mV','0 mV','+40 mV','-90 mV'],a:0},
+      {q:'Balance and coordination are controlled by:',o:['Cerebrum','Medulla','Cerebellum','Hypothalamus'],a:2},
+      {q:'Thermoregulation and hunger are controlled by:',o:['Cerebellum','Hypothalamus','Thalamus','Medulla'],a:1},
+      {q:'Main neurotransmitter at the neuromuscular junction:',o:['Dopamine','Serotonin','Acetylcholine','GABA'],a:2}],
+  mL:['Cerebrum','Cerebellum','Medulla oblongata','Hypothalamus','Limbic system'],
+  mR:['Emotions & memory','Vital centres (breathing, HR)','Balance & posture','Hunger & thermoregulation','Voluntary actions & intelligence'],
+  mA:[4,2,1,3,0]}
+}
+];
+
+const T12=[
+{num:'11',title:'Sexual Reproduction in Flowering Plants',sub:'Microsporogenesis, megasporogenesis, double fertilisation',tags:['Reproduction'],diff:'Hard',accent:'#c8401a',
+ script:{
+  hook:`<p>Start: <em>"A mango seed travels 10 km inside a bird's gut. A coconut floats across oceans. A dandelion rides on wind for miles. Plants cannot move — so they evolved to make the entire world carry their seeds. This chapter reveals exactly how."</em></p>`,
+  concept:`<p>🌸 <strong>Stamen (Male):</strong> Anther → microsporangium → Pollen Mother Cell (PMC, 2n) → meiosis → microspores (n) → pollen grain (male gametophyte, 2-celled: vegetative + generative). Tapetum = innermost layer = nutritive layer for developing pollen.</p><p>🌺 <strong>Pistil (Female):</strong> Ovule → nucellus → Megaspore Mother Cell (MMC, 2n) → meiosis → 4 megaspores → 3 degenerate → 1 survives (chalazal end) → 3 rounds of mitosis → embryo sac (7-celled, 8-nucleate).</p><p><strong>Embryo Sac Components:</strong> 3 antipodals (chalazal end) + 2 synergids + 1 egg cell (all at micropylar end) + 2 polar nuclei (central cell). Total = 7 cells, 8 nuclei.</p><div class="neet-trap"><div class="trap-l">⚠ Double Fertilisation — Unique to Angiosperms</div><p>Discovered by Van Tieghem (and Nawaschin independently). Pollen tube delivers 2 male gametes: (1) Fuses with egg cell → zygote (2n) → embryo. (2) Fuses with 2 polar nuclei → Primary Endosperm Nucleus (PEN, 3n) → endosperm. Triple fusion = second act = fusion making PEN (one sperm + two polar nuclei).</p></div>`,
+  end:`<div class="say">"Every seed — every mango, every wheat grain, every rice corn — is the result of double fertilisation. A process that takes milliseconds and took millions of years to evolve. Nature's most precise reproductive act."</div>`,
+  trick:`<strong>Embryo Sac Mnemonic:</strong> "3 Aunts, 2 Sisters, 1 Egg, 2 Poles" = 3 antipodals, 2 synergids, 1 egg cell, 2 polar nuclei. Synergids have FILIFORM APPARATUS — guide pollen tube entry. Tapetum = innermost layer of microsporangium wall = nutritive. Double fertilisation ≠ Triple fusion (triple fusion is the second act within double fertilisation).`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Double fertilisation was discovered by:',o:['Maheshwari','Van Tieghem','Haberlandt','Strasburger'],a:1},
+      {q:'Endosperm nucleus (PEN) is:',o:['Diploid (2n)','Haploid (n)','Triploid (3n)','Tetraploid'],a:2},
+      {q:'Number of cells in the mature embryo sac:',o:['6','7','8','5'],a:1},
+      {q:'Nutritive layer of the anther is:',o:['Endothecium','Tapetum','Epidermis','Middle layer'],a:1}],
+  mL:['Antipodals','Synergids','Egg cell','Polar nuclei','Tapetum'],
+  mR:['Nutritive to pollen','Forms endosperm (3n)','Fertilised to form zygote (2n)','Chalazal end cells','Filiform apparatus'],
+  mA:[3,4,2,1,0]}
+},
+{num:'12',title:'Molecular Basis of Inheritance',sub:'DNA structure, replication, transcription, translation',tags:['Genetics'],diff:'Hard',accent:'#1a4fc8',
+ script:{
+  hook:`<p>Open: <em>"In 1953, Watson and Crick stared at an X-ray photograph taken by Rosalind Franklin — and in that moment, they understood the secret of life. The DNA double helix. Today you will understand exactly what they saw — and why it changed everything."</em></p>`,
+  concept:`<p>🧬 <strong>DNA Structure (Watson-Crick, 1953):</strong> Right-handed B-form double helix. Antiparallel (5'→3' and 3'→5'). A=T (2 H-bonds), G≡C (3 H-bonds). Width = 2nm. Pitch = 3.4nm. 10 bp per turn. Rise per bp = 0.34nm. Sugar-phosphate backbone on outside; bases inside.</p><p>🔄 <strong>Replication (Semi-conservative — Meselson & Stahl, 1958):</strong> Helicase unwinds → Primase adds RNA primer → DNA Pol III elongates (5'→3' only). Leading strand = continuous. Lagging strand = Okazaki fragments. DNA Pol I removes primers. Ligase joins fragments. Origin (ori) = single in prokaryotes, multiple in eukaryotes.</p><div class="neet-trap"><div class="trap-l">⚠ Central Dogma + Genetic Code</div><p>DNA → (Transcription) → mRNA → (Translation) → Protein. Reverse transcription (RNA→DNA) in retroviruses. 64 codons: 61 sense + 3 stop (UAA=Ochre, UAG=Amber, UGA=Opal). Start codon = AUG (Methionine). Code is degenerate (multiple codons per amino acid), universal (with minor exceptions), non-overlapping, comma-less.</p></div>`,
+  end:`<div class="say">"Four letters — A, T, G, C. Three billion base pairs. One human being. That is the language of life. Once you understand it, you understand diseases, drugs, evolution, and the future of medicine. This chapter is the key to all of modern biology."</div>`,
+  trick:`<strong>Stop Codons:</strong> "UAA = U-Are-Away (Ochre). UAG = U-Are-Gone (Amber). UGA = U-Go-Away (Opal)." Meselson-Stahl: N¹⁵→N¹⁴ shift. After 1 generation = one hybrid band (proves semi-conservative). After 2 = hybrid + light band. DNA pitch vs width vs rise: 3.4nm vs 2nm vs 0.34nm — ALL three are tested separately every year!`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Semi-conservative replication was proved by:',o:['Watson & Crick','Meselson & Stahl','Griffith','Avery'],a:1},
+      {q:'Number of stop codons in the genetic code:',o:['1','2','3','4'],a:2},
+      {q:'Okazaki fragments are joined by:',o:['Helicase','Primase','DNA Ligase','DNA Pol III'],a:2},
+      {q:'The pitch (one complete turn) of DNA is:',o:['0.34 nm','2 nm','3.4 nm','34 nm'],a:2}],
+  mL:['Helicase','Primase','DNA Pol III','DNA Pol I','DNA Ligase'],
+  mR:['Joins Okazaki fragments','Removes RNA primer','Elongates new DNA strand','Unwinds double helix','Adds RNA primer'],
+  mA:[3,4,2,1,0]}
+},
+{num:'13',title:'Principles of Inheritance & Variation',sub:"Mendel's laws, co-dominance, chromosomal disorders",tags:['Genetics'],diff:'Hard',accent:'#1a8a3f',
+ script:{
+  hook:`<p>Begin: <em>"Gregor Mendel was a monk who counted 28,000 pea plants over 7 years. He had no idea what genes or chromosomes were. Yet he discovered the fundamental laws explaining why you look like your parents. The power of rigorous observation over raw instinct."</em></p>`,
+  concept:`<p>🌱 <strong>Mendel's Three Laws:</strong> (1) Law of Dominance. (2) Law of Segregation (most important — gametes carry only one allele). (3) Law of Independent Assortment (only for genes on different chromosomes).</p><p>📊 <strong>Key Ratios:</strong> Monohybrid phenotype = 3:1. Monohybrid genotype = 1:2:1. Dihybrid = 9:3:3:1. Test cross (with homozygous recessive) = 1:1. Incomplete dominance (mirabilis) = 1:2:1 phenotype. Co-dominance (ABO) = both alleles expressed simultaneously.</p><div class="neet-trap"><div class="trap-l">⚠ Chromosomal Disorders</div><p>ABO blood group = co-dominance + multiple allelism (Iᴬ, Iᴮ, i). Haemophilia = X-linked recessive (males affected, females carriers). Sickle cell anaemia = autosomal recessive = co-dominance at molecular level. Down syndrome = trisomy 21 (47 chromosomes). Klinefelter = 47, XXY. Turner = 45, XO (only viable monosomy in humans).</p></div>`,
+  end:`<div class="say">"Mendel's peas gave us the language of heredity. Today that language runs hospitals (genetic testing), courts (DNA fingerprinting), agriculture (GM crops), and medicine (gene therapy). One monk, 7 years, 28,000 plants — the entire foundation of genetics."</div>`,
+  trick:`<strong>Chromosomal Disorders Table:</strong> Turner = 45,XO (female, sterile, short). Klinefelter = 47,XXY (male, gynaecomastia, sterile). Down = 47+21 (mental retardation, characteristic facial features). Haemophilia: carrier mother (X^H X^h) × normal father → 50% sons affected. Queen Victoria carried the haemophilia gene that spread to European royalty.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Klinefelter syndrome karyotype is:',o:['45, XO','47, XXY','47, +21','46, XX'],a:1},
+      {q:'Dihybrid cross phenotypic ratio:',o:['3:1','1:2:1','9:3:3:1','1:1'],a:2},
+      {q:'ABO blood group is an example of:',o:['Incomplete dominance','Co-dominance + multiple allelism','Simple dominance','Epistasis'],a:1},
+      {q:'Down syndrome is caused by trisomy of chromosome:',o:['13','18','21','23'],a:2}],
+  mL:['Turner syndrome','Down syndrome','Haemophilia','Sickle cell anaemia','Klinefelter syndrome'],
+  mR:['Trisomy 21','X-linked recessive','47, XXY','45, XO (female)','Autosomal recessive, co-dominant'],
+  mA:[3,0,1,4,2]}
+},
+{num:'14',title:'Evolution',sub:'Origin of life, Darwin, Hardy-Weinberg, speciation',tags:['Evolution'],diff:'Medium',accent:'#c9891a',
+ script:{
+  hook:`<p>Ask: <em>"We share 98.7% of DNA with chimpanzees. 85% with mice. 44% with a banana. What does this mean? That every living being on Earth has ONE common ancestor — and every living creature is your distant relative."</em></p>`,
+  concept:`<p>🌊 <strong>Origin of Life:</strong> Oparin-Haldane = primordial soup theory. Miller-Urey experiment (1953): electric sparks + CH₄ + NH₃ + H₂O → amino acids (proved organic molecules form abiotically). First cells = chemoheterotrophs in anaerobic conditions.</p><p>🦕 <strong>Evidences of Evolution:</strong> Fossil record. Homologous organs (common ancestry, divergent evolution — forelimbs of whale, bat, human, horse). Analogous organs (convergent evolution — wings of bat and butterfly). Vestigial organs (coccyx = tailbone in humans).</p><div class="neet-trap"><div class="trap-l">⚠ Hardy-Weinberg Equilibrium</div><p>p² + 2pq + q² = 1 (where p + q = 1). Allele frequencies constant in large population with: no mutation, no gene flow, no genetic drift, no selection, random mating. Disturbed by: mutation, gene flow, genetic drift (founder effect, bottleneck), natural selection, non-random mating. Adaptive radiation = diverging from common ancestor (Darwin's finches, Galapagos).</p></div>`,
+  end:`<div class="say">"4.5 billion years. From a single cell to the human brain. Evolution is not a casual theory — it is one of the most verified scientific facts in history. You are the current tip of an unbroken chain of life stretching back to the first cell in the primordial ocean."</div>`,
+  trick:`<strong>H-W Calculation (NEET type):</strong> If q² = 0.09, then q = 0.3, p = 0.7. Carriers (2pq) = 2 × 0.7 × 0.3 = 0.42 = 42%. This exact calculation appears EVERY year! Five conditions for H-W equilibrium = "No SAMM" = No Selection, no Assortative mating, no Mutation, no Migration (gene flow). Galapagos finches = adaptive radiation = classic NEET example.`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'Miller-Urey experiment produced ___ from inorganic molecules.',a:'amino acids'},
+      {t:'Hardy-Weinberg equation: p² + 2pq + q² = ___.',a:'1'},
+      {t:'Forelimbs of humans and whales are ___ organs (same origin, different function).',a:'homologous'},
+      {t:"Darwin's finches in Galapagos are an example of ___ radiation.",a:'adaptive'},
+      {t:'Genetic drift occurring in small founder populations is called the ___ effect.',a:'founder'}]}
+},
+{num:'15',title:'Human Reproduction',sub:'Gametogenesis, fertilisation, embryonic development',tags:['Reproduction'],diff:'Hard',accent:'#9a1ac8',
+ script:{
+  hook:`<p>Start: <em>"You began as a single cell — 0.1 mm in diameter. Nine months later: 37 trillion cells, every organ system formed from scratch. In those 9 months, the most miraculous developmental process on Earth unfolded. Today we understand it."</em></p>`,
+  concept:`<p>👨 <strong>Male System:</strong> Testes (seminiferous tubules = spermatogenesis). Leydig/Interstitial cells = testosterone (LH stimulated). Sertoli cells = FSH stimulated, nourish developing sperm. Sperm: head (acrosome + nucleus) + middle piece (mitochondria = energy for motility) + tail (flagellum).</p><p>👩 <strong>Female System:</strong> Oogenesis begins in foetal life (primordial follicles). Primary oocyte arrested in Prophase I until puberty. At ovulation: Secondary oocyte released (arrested in Metaphase II). Completes meiosis II ONLY if fertilised.</p><div class="neet-trap"><div class="trap-l">⚠ Fertilisation & Implantation</div><p>Acrosome reaction: releases hydrolytic enzymes to penetrate zona pellucida. Cortical reaction: prevents polyspermy. Implantation: day 7 after fertilisation, blastocyst embeds in uterine endometrium. hCG = produced by trophoblast → maintains corpus luteum in early pregnancy → basis of pregnancy test!</p></div><p>🌱 <strong>Development:</strong> Zygote → cleavage → morula (16 cells) → blastocyst (ICM + trophoblast) → implantation → gastrulation (3 germ layers) → organogenesis. Placenta: nutrition, gas exchange, excretion, hormones (hCG, hPL, oestrogen, progesterone).</p>`,
+  end:`<div class="say">"From two half-cells to a full human being in 9 months. Every physician, every developmental biologist — their knowledge starts here. Human reproduction is not just biology — it's the origin story of every person who has ever lived."</div>`,
+  trick:`<strong>Germ Layer Derivatives:</strong> Ectoderm = SKIN + NERVOUS system (outermost). Endoderm = GUT lining + respiratory lining (innermost). Mesoderm = MUSCLE + BONE + BLOOD + KIDNEY (middle). Trick: "Eco = outside, Endo = inside, Meso = middle." hCG = earliest pregnancy indicator = produced by trophoblast = used in home pregnancy kits. Sertoli = FSH. Leydig = LH/testosterone.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Sertoli cells are stimulated by:',o:['LH','FSH','Testosterone','Oestrogen'],a:1},
+      {q:'hCG is produced by:',o:['Corpus luteum','Trophoblast','Ovary','Pituitary'],a:1},
+      {q:'Implantation occurs approximately ___ days after fertilisation:',o:['3','5','7','14'],a:2},
+      {q:'Mitochondria in sperm middle piece provide energy for:',o:['Acrosome reaction','Tail/flagellum motility','Fertilisation','Capacitation only'],a:1}],
+  mL:['Acrosome reaction','Cortical reaction','Leydig cells','Sertoli cells','Trophoblast'],
+  mR:['Produces hCG','Testosterone synthesis','FSH-stimulated, nourishes sperm','Prevents polyspermy','Penetrates zona pellucida'],
+  mA:[4,3,1,2,0]}
+},
+{num:'16',title:'Reproductive Health',sub:'Contraception, STIs, ART, population control',tags:['Reproduction'],diff:'Medium',accent:'#1a8a3f',
+ script:{
+  hook:`<p>Open: <em>"India's population = 1.4 billion. Global = 8 billion. In 1798, Malthus warned population grows geometrically while food grows arithmetically. Reproductive health — understanding and managing fertility — is arguably the most important public health challenge on Earth."</em></p>`,
+  concept:`<p>💊 <strong>Contraceptive Methods:</strong> Natural (periodic abstinence, lactational amenorrhoea — effective only up to 6 months post-partum). Barrier: Condom (ONLY method preventing BOTH pregnancy AND STIs). Diaphragm, cervical cap. IUDs: Cu-T (copper ions = spermicidal), LNG-20 (hormonal, thickens cervical mucus). Oral pills: combined (oestrogen + progesterone = suppress ovulation). Emergency: within 72 hours.</p><div class="neet-trap"><div class="trap-l">⚠ Sterilisation & ART</div><p>Vasectomy = cut vas deferens (male, permanent). Tubectomy = cut/tie fallopian tubes (female, permanent). MTP (Medical Termination of Pregnancy) = legal in India up to 20 weeks. IVF = in vitro fertilisation = "test tube baby" (first: Louise Brown, 1978, Steptoe & Edwards). ZIFT = Zygote Intra-Fallopian Transfer. GIFT = Gamete IFT. IUT = embryo transferred to uterus.</p></div><p>🦠 <strong>STIs:</strong> Gonorrhoea (Neisseria gonorrhoeae). Syphilis (Treponema pallidum). Genital herpes (HSV-2). AIDS (HIV). Chlamydiasis = most common bacterial STI globally. Hepatitis B = most common STI globally overall.</p>`,
+  end:`<div class="say">"Reproductive health is not just biology — it is ethics, policy, and human rights. Every year, 23 million unsafe abortions occur globally. Understanding this chapter makes you not just a better doctor, but a more informed human being."</div>`,
+  trick:`<strong>Sterilisation Trick:</strong> "Vas → Vasectomy (male). Tube → Tubectomy (female)." For IUDs: Cu-T = copper spermicidal ions. Hormonal IUDs = progesterone. ZIFT = Zygote to Fallopian. GIFT = Gametes to Fallopian. IUT = Embryo to Uterus. Condom = ONLY contraceptive that ALSO prevents STIs — tested every year. Louise Brown (1978) = world's first IVF baby.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:"World's first test tube baby was born in:",o:['1969','1975','1978','1982'],a:2},
+      {q:'Which contraceptive also prevents STIs?',o:['IUD (Cu-T)','Oral pills','Condom','Tubectomy'],a:2},
+      {q:'Vasectomy involves cutting the:',o:['Urethra','Epididymis','Vas deferens','Seminal vesicle'],a:2},
+      {q:'Most common STI globally is:',o:['Syphilis','Hepatitis B','HIV','Gonorrhoea'],a:1}],
+  mL:['IVF','ZIFT','GIFT','IUT','MTP'],
+  mR:['Legal abortion','Embryo transferred to uterus','Gametes transferred to fallopian tube','Test tube fertilisation','Zygote transferred to fallopian tube'],
+  mA:[3,4,2,1,0]}
+},
+{num:'17',title:'Biotechnology: Principles & Processes',sub:'Restriction enzymes, PCR, rDNA, cloning vectors',tags:['Biotechnology'],diff:'Hard',accent:'#c8401a',
+ script:{
+  hook:`<p>Begin: <em>"Insulin used to be extracted from pig pancreases — 8,000 pigs for one year's supply for ONE diabetic patient. Today, bacteria make human insulin in a tank. Recombinant DNA technology changed medicine. This chapter explains exactly how."</em></p>`,
+  concept:`<p>✂️ <strong>Restriction Enzymes (Molecular Scissors):</strong> Discovered by Arber, Smith, Nathans (Nobel 1978). EcoRI cuts at GAATTC (palindromic sequence) — creates 5' sticky ends. BamHI cuts at GGATCC. Gel electrophoresis separates DNA by size (smaller = moves further toward anode).</p><p>🔧 <strong>rDNA Technology Steps:</strong> (1) Isolate DNA of interest. (2) Cut with restriction enzyme. (3) Insert into vector (plasmid). (4) Transform into host (E. coli). (5) Select recombinants. (6) Culture → express protein at scale.</p><div class="neet-trap"><div class="trap-l">⚠ PCR (Mullis, Nobel 1993)</div><p>Polymerase Chain Reaction: Denaturation (94–95°C, strands separate) → Annealing (54°C, primers bind) → Extension (72°C, Taq polymerase copies). 30 cycles = 2³⁰ = >1 billion copies. Taq polymerase from Thermus aquaticus (thermostable = survives 95°C). pBR322 = most studied plasmid, has ampR + tetR + ori.</p></div><p>🧫 <strong>Vectors:</strong> Plasmids (pBR322). Bacteriophages (lambda phage). Ti plasmid (Agrobacterium tumefaciens) for plant transformation. BAC/YAC for large inserts (Human Genome Project).</p>`,
+  end:`<div class="say">"From 8,000 pigs to a single fermentation tank. That is the power of recombinant DNA technology. Cancer drugs, vaccines, diagnostic kits, forensic DNA fingerprinting — all trace back to the molecular scissors and molecular glue of this chapter."</div>`,
+  trick:`<strong>PCR Temperature Trick:</strong> "DAE" = Denaturation (95°C), Annealing (54°C), Extension (72°C). Always 72°C for extension = Taq polymerase optimal temperature. Insertional inactivation: insert gene into tetR of pBR322 → bacteria become ampR but tet-sensitive → white colonies on tet plates = recombinants! EcoRI = most commonly asked restriction enzyme.`
+ },
+ ws:{type:'fillblanks',
+  ss:[{t:'EcoRI cuts at the palindromic sequence ___.',a:'GAATTC'},
+      {t:'PCR was invented by ___.',a:'Mullis'},
+      {t:'Extension in PCR occurs at ___ °C.',a:'72'},
+      {t:'Taq polymerase is obtained from ___ (bacterium).',a:'Thermus aquaticus'},
+      {t:'Ti plasmid is used to transform ___ plants via Agrobacterium.',a:'dicot'}]}
+},
+{num:'18',title:'Microbes in Human Welfare',sub:'Antibiotics, biogas, sewage treatment, biofertilisers',tags:['Applied Biology'],diff:'Medium',accent:'#1a8a3f',
+ script:{
+  hook:`<p>Ask: <em>"Penicillin has saved an estimated 200 million lives since 1940. Curd is made by bacteria in your kitchen. Biogas runs 50 million Indian homes. Microbes are humanity's most useful allies — and today we study the alliance."</em></p>`,
+  concept:`<p>🍶 <strong>Food Industry:</strong> Lactobacillus = curd/yogurt (lactic acid fermentation). Saccharomyces cerevisiae = bread (CO₂ leavening) + beer/wine (ethanol). Aspergillus niger = citric acid. Acetobacter aceti = vinegar (acetic acid). Penicillium roqueforti = cheese ripening.</p><p>💊 <strong>Antibiotics:</strong> Penicillin (Alexander Fleming, 1928 — observed Penicillium notatum lysing Staphylococcus). Streptomycin (from Streptomyces). Chloramphenicol (from Streptomyces). Erythromycin (Streptomyces erythreus).</p><div class="neet-trap"><div class="trap-l">⚠ Biogas & Sewage</div><p>Biogas = ~75% methane + CO₂ + H₂S. Produced by methanogens (Methanobacterium) in anaerobic conditions from cattle dung. Sewage treatment: Primary (physical settling, removes suspended solids). Secondary (biological — aerobic microbes oxidise organic matter, BOD drops). BOD (Biochemical Oxygen Demand) = indicator of organic pollution. Higher BOD = more polluted water.</p></div><p>🌱 <strong>Biofertilisers:</strong> Rhizobium (legume nodules). Azospirillum (non-legume N-fixation). Azolla + Anabaena (rice fields). Mycorrhiza (phosphate absorption, wide host range). Baculovirus = biological pesticide, safe for non-target organisms.</p>`,
+  end:`<div class="say">"In 1 gram of healthy soil, there are 100 million bacteria. They have been here for 3.8 billion years. They make our food, cure our diseases, treat our waste, and fertilise our crops. Microbes are the invisible foundation of all human civilisation."</div>`,
+  trick:`<strong>Fleming's Discovery:</strong> Penicillium notatum contaminated his Staphylococcus culture plate → clear zone = bacterial lysis → penicillin! BOD = Biochemical Oxygen Demand = organic pollution measure. Higher BOD = more organic matter = more polluted. After secondary treatment, BOD drops sharply. Methanogens = in rumen of cattle + in biogas plants. Obligate anaerobes.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Penicillin was discovered by:',o:['Pasteur','Fleming','Waksman','Chain'],a:1},
+      {q:'Biogas contains mainly:',o:['CO₂','H₂S','Methane (~75%)','Ethane'],a:2},
+      {q:'BOD measures:',o:['Bacterial count in water','Organic pollution level','O₂ production rate','Water pH'],a:1},
+      {q:'Mycorrhiza helps plants absorb:',o:['Nitrogen','Potassium','Phosphate','Calcium'],a:2}],
+  mL:['Lactobacillus','Saccharomyces cerevisiae','Aspergillus niger','Methanobacterium','Rhizobium'],
+  mR:['Biogas (methane) production','Curd and lactic acid','Bread and beer','Citric acid production','N-fixation in legumes'],
+  mA:[1,2,3,0,4]}
+},
+{num:'19',title:'Ecosystem',sub:'Food chains, energy flow, nutrient cycles, ecological succession',tags:['Ecology'],diff:'Hard',accent:'#1a4fc8',
+ script:{
+  hook:`<p>Open: <em>"A forest fire burns 10,000 acres. Within 5 years, pioneer plants return. Within 100 years, the forest is back and you cannot tell a fire ever happened. This is ecological succession — the self-healing power of ecosystems. Today we understand how they work."</em></p>`,
+  concept:`<p>🌿 <strong>Energy Flow — 10% Law (Lindemann, 1942):</strong> Only 10% of energy transfers between trophic levels. 90% lost as heat + respiration. Therefore: Producers (T1) > Herbivores (T2) > Carnivores (T3) > Top carnivores (T4). Limits food chains to 4–5 levels. Unidirectional flow — energy does not cycle.</p><p>📊 <strong>Productivity:</strong> GPP (Gross Primary Productivity) = total rate of photosynthesis. NPP = GPP − Respiration. Tropical rainforests = highest NPP. Deep ocean = lowest. Standing crop = biomass at any given moment.</p><div class="neet-trap"><div class="trap-l">⚠ Ecological Pyramids</div><p>Pyramid of Energy = ALWAYS upright (no exceptions). Pyramid of Biomass = inverted in ocean (phytoplankton biomass < zooplankton at any instant, because phytoplankton turns over rapidly). Pyramid of Number = inverted in parasitic food chain. Phosphorus cycle = NO gaseous phase (unlike N, C, S cycles). Phosphorus cycle = purely sedimentary.</p></div><p>🔄 <strong>Ecological Succession:</strong> Primary (bare rock → lichens → mosses → grasses → shrubs → climax forest). Secondary (disturbed land with soil already present, faster). Xerosere (dry) / Hydrosere (aquatic). Climax community = stable final stage.</p>`,
+  end:`<div class="say">"Every ecosystem — a tide pool, a wheat field, the Amazon — follows the same energy laws. The 10% rule explains why 10 kg of grain makes 1 kg of beef. Understanding ecosystems is the foundation for understanding climate change, food security, and conservation."</div>`,
+  trick:`<strong>Pyramid Rules:</strong> Energy = ALWAYS upright. Biomass = inverted in OCEAN (phytoplankton replaced faster than consumed). Number = inverted in PARASITIC chain. Phosphorus = NO gaseous phase — "P has no P-lane!" N₂ fixation: Rhizobium (legumes), Azotobacter (free-living), Nostoc (cyanobacteria in water). Lindemann's 10% law = 1942. Tansley coined "ecosystem" = 1935.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Pyramid of energy is always:',o:['Inverted','Upright','Spindle-shaped','Variable'],a:1},
+      {q:"Lindemann's 10% Law relates to:",o:['Biodiversity','Energy transfer between trophic levels','Nutrient cycling','Population growth'],a:1},
+      {q:'Phosphorus cycle lacks a:',o:['Sedimentary phase','Aquatic phase','Gaseous phase','Biological phase'],a:2},
+      {q:'Primary succession begins on:',o:['Abandoned farmland','Bare rock with no soil','Drained ponds','After forest fire'],a:1}],
+  mL:['GPP','NPP','Xerosere','Hydrosere','Pioneer species'],
+  mR:['First coloniser on bare substrate','Water-based succession','GPP minus respiration losses','Total photosynthesis rate','Dry land succession'],
+  mA:[3,2,4,1,0]}
+},
+{num:'20',title:'Biodiversity & Conservation',sub:'Species diversity, HIPPO threats, hotspots, conservation',tags:['Ecology'],diff:'Medium',accent:'#c9891a',
+ script:{
+  hook:`<p>Open: <em>"Every single day, 150 species go extinct. That's 6 per hour. In the time of this lecture, 6 species that took millions of years to evolve will vanish forever. This is the 6th mass extinction — and unlike the previous five, this one has a single cause: us."</em></p>`,
+  concept:`<p>📊 <strong>Biodiversity Levels:</strong> Genetic diversity (within species). Species diversity (between species — richness + evenness). Ecosystem diversity (variety of habitats). IUCN estimates 7 million species exist; only ~1.5 million documented. Tropics have highest species diversity (latitudinal gradient).</p><p>🌍 <strong>Species-Area Relationship:</strong> log S = log C + Z log A. Z = 0.1–0.2 for small islands; 0.6–1.2 for large islands or continents. More area = more species. Rivet Popper Hypothesis (Paul Ehrlich): each species = a rivet. Lose too many = ecosystem collapses like an airplane losing rivets.</p><div class="neet-trap"><div class="trap-l">⚠ HIPPO — Causes of Biodiversity Loss</div><p><strong>H</strong>abitat loss (BIGGEST cause globally, especially tropical deforestation). <strong>I</strong>nvasive species (second biggest — e.g. Nile perch in Lake Victoria). <strong>P</strong>ollution. <strong>P</strong>opulation (over-exploitation/hunting). <strong>O</strong>ver-harvesting. India: 4 biodiversity hotspots = Eastern Himalaya, Western Ghats, Indo-Burma, Sundaland.</p></div><p>🌿 <strong>Conservation:</strong> In-situ (in natural habitat): National Parks, Wildlife Sanctuaries, Biosphere Reserves, Sacred Groves. Ex-situ (outside): Zoos, Botanical Gardens, Seed Banks, Cryopreservation. Hotspot criteria: >1,500 endemic plant species AND lost >70% original habitat.</p>`,
+  end:`<div class="say">"We are the generation that decides whether thousands of species live or die. Every ecosystem service — clean air, clean water, food, medicine — depends on the biodiversity we are losing. Knowing this chapter is not just academic. It is a moral responsibility."</div>`,
+  trick:`<strong>India's 4 Hotspots:</strong> "Every Western Indian Sunflower" = Eastern Himalaya, Western Ghats, Indo-Burma, Sundaland. Sacred Groves = in-situ (NOT ex-situ) — they are natural habitats, just community-protected. HIPPO = most important exam list in conservation biology. Biodiversity hotspot criteria: >1500 endemic plants + >70% habitat lost = both criteria must be met.`
+ },
+ ws:{type:'mcq+match',
+  qs:[{q:'Number of biodiversity hotspots in India:',o:['2','3','4','6'],a:2},
+      {q:'The biggest cause of biodiversity loss globally is:',o:['Pollution','Invasive species','Habitat loss','Over-hunting'],a:2},
+      {q:'Sacred Groves are an example of ___ conservation:',o:['Ex-situ','In-situ','Cryopreservation','Gene bank'],a:1},
+      {q:"'Z' value in species-area relationship for large continents is:",o:['0.1–0.2','0.6–1.2','2.0–3.0','0.01–0.05'],a:1}],
+  mL:['National Parks','Zoological gardens','Seed banks','Biosphere Reserves','Cryopreservation'],
+  mR:['Ex-situ (alive animals)','Low temperature storage of material','In-situ with core + buffer zones','Ex-situ (stored seeds)','In-situ (no human activity)'],
+  mA:[4,0,3,2,1]}
+}
+];
+
+/* ══════════════════════════════════
+   LANDING PAGE TOPIC GRID
+══════════════════════════════════ */
+const tTagMap={'Cell Biology':'tctag-g','Biochemistry':'tctag-a','Plant Physiology':'tctag-g','Human Physiology':'tctag-r','Animal Biology':'tctag-a','Reproduction':'tctag-a','Genetics':'tctag-g','Evolution':'tctag-a','Biotechnology':'tctag-r','Applied Biology':'tctag-g','Ecology':'tctag-b'};
+const allLanding=[
+ {num:'01',t:'Cell: The Unit of Life',s:'Prokaryotic vs eukaryotic, organelles, cell theory',tag:'Cell Biology',cls:'11',d:'Hard'},
+ {num:'02',t:'Biomolecules',s:'Carbohydrates, proteins, lipids, nucleic acids',tag:'Biochemistry',cls:'11',d:'Hard'},
+ {num:'03',t:'Cell Division',s:'Mitosis, meiosis, cell cycle regulation',tag:'Cell Biology',cls:'11',d:'Hard'},
+ {num:'04',t:'Photosynthesis',s:'Light reactions, Calvin cycle, C3/C4/CAM',tag:'Plant Physiology',cls:'11',d:'Hard'},
+ {num:'05',t:'Respiration in Plants',s:'Glycolysis, Krebs cycle, ETC, fermentation',tag:'Plant Physiology',cls:'11',d:'Medium'},
+ {num:'06',t:'Mineral Nutrition',s:'Essential elements, deficiency, N-fixation',tag:'Plant Physiology',cls:'11',d:'Medium'},
+ {num:'07',t:'Structural Organisation',s:'Epithelial, connective, muscle, neural tissues',tag:'Animal Biology',cls:'11',d:'Medium'},
+ {num:'08',t:'Digestion & Absorption',s:'GI tract, enzymes, absorption mechanisms',tag:'Human Physiology',cls:'11',d:'Hard'},
+ {num:'09',t:'Breathing & Exchange of Gases',s:'Lung volumes, O₂ transport, Bohr effect',tag:'Human Physiology',cls:'11',d:'Medium'},
+ {num:'10',t:'Neural Control & Coordination',s:'Neuron, action potential, synapse, CNS',tag:'Human Physiology',cls:'11',d:'Hard'},
+ {num:'11',t:'Sexual Reproduction in Plants',s:'Microsporogenesis, double fertilisation',tag:'Reproduction',cls:'12',d:'Hard'},
+ {num:'12',t:'Molecular Basis of Inheritance',s:'DNA, replication, transcription, translation',tag:'Genetics',cls:'12',d:'Hard'},
+ {num:'13',t:'Principles of Inheritance',s:"Mendel's laws, co-dominance, chromosomal disorders",tag:'Genetics',cls:'12',d:'Hard'},
+ {num:'14',t:'Evolution',s:'Origin of life, Hardy-Weinberg, speciation',tag:'Evolution',cls:'12',d:'Medium'},
+ {num:'15',t:'Human Reproduction',s:'Gametogenesis, fertilisation, embryology',tag:'Reproduction',cls:'12',d:'Hard'},
+ {num:'16',t:'Reproductive Health',s:'Contraception, STIs, ART',tag:'Reproduction',cls:'12',d:'Medium'},
+ {num:'17',t:'Biotechnology: Principles',s:'Restriction enzymes, PCR, rDNA technology',tag:'Biotechnology',cls:'12',d:'Hard'},
+ {num:'18',t:'Microbes in Human Welfare',s:'Antibiotics, biogas, sewage, biofertilisers',tag:'Applied Biology',cls:'12',d:'Medium'},
+ {num:'19',t:'Ecosystem',s:'Energy flow, nutrient cycles, succession',tag:'Ecology',cls:'12',d:'Hard'},
+ {num:'20',t:'Biodiversity & Conservation',s:'HIPPO, hotspots, in-situ vs ex-situ',tag:'Ecology',cls:'12',d:'Medium'},
+];
+let currentFilter='11';
+function filterLanding(cls,btn){
+ currentFilter=cls;
+ document.querySelectorAll('.tog-btn').forEach(b=>b.classList.remove('active'));
+ btn.classList.add('active');
+ renderLanding();
+}
+function renderLanding(){
+ const list=currentFilter==='all'?allLanding:allLanding.filter(t=>t.cls===currentFilter);
+ document.getElementById('landingGrid').innerHTML=list.map(t=>`
+  <div class="tc" onclick="launchApp()">
+   <span class="dbadge ${t.d==='Hard'?'dhard':'dmed'}">${t.d}</span>
+   <div class="tc-num">TOPIC ${t.num} · CLASS ${t.cls==='11'?'XI':'XII'}</div>
+   <div class="tc-title">${t.t}</div>
+   <div class="tc-sub">${t.s}</div>
+   <div class="tc-tags"><span class="tctag ${tTagMap[t.tag]||'tctag-g'}">${t.tag}</span></div>
+  </div>`).join('');
+}
+renderLanding();
+
+/* ══════════════════════════════════
+   APP PLATFORM
+══════════════════════════════════ */
+function launchApp(){
+ document.getElementById('landing').style.display='none';
+ document.getElementById('app').style.display='block';
+ window.scrollTo(0,0);
+ buildAppGrids();
+}
+function goLanding(){
+ document.getElementById('app').style.display='none';
+ document.getElementById('landing').style.display='block';
+ window.scrollTo(0,0);
+}
+function showAppTab(cls){
+ document.querySelectorAll('.app-section').forEach(s=>s.classList.remove('active'));
+ document.querySelectorAll('.app-tab').forEach(b=>b.classList.remove('active'));
+ document.getElementById('tab-'+cls).classList.add('active');
+ event.target.classList.add('active');
+}
+let gridsBuilt=false;
+function buildAppGrids(){
+ if(gridsBuilt)return; gridsBuilt=true;
+ const accentMap={'#c84020':'tctag-r','#c8401a':'tctag-r','#1a4fc8':'tctag-b','#1a8a3f':'tctag-g','#c9891a':'tctag-a','#9a1ac8':'tctag-a'};
+ document.getElementById('grid11').innerHTML=T11.map((t,i)=>`
+  <div class="atc" style="border-top-color:${t.accent}" onclick="openTopic(${i},false)">
+   <span class="atc-badge ${t.diff==='Hard'?'dhard':'dmed'}">${t.diff}</span>
+   <div class="atc-num">TOPIC ${t.num} · CLASS XI</div>
+   <div class="atc-title">${t.title}</div>
+   <div class="atc-sub">${t.sub}</div>
+   <div class="atc-tags"><span class="tctag ${accentMap[t.accent]||'tctag-g'}">${t.tags[0]}</span></div>
+  </div>`).join('');
+ document.getElementById('grid12').innerHTML=T12.map((t,i)=>`
+  <div class="atc" style="border-top-color:${t.accent}" onclick="openTopic(${i},true)">
+   <span class="atc-badge ${t.diff==='Hard'?'dhard':'dmed'}">${t.diff}</span>
+   <div class="atc-num">TOPIC ${t.num} · CLASS XII</div>
+   <div class="atc-title">${t.title}</div>
+   <div class="atc-sub">${t.sub}</div>
+   <div class="atc-tags"><span class="tctag ${accentMap[t.accent]||'tctag-g'}">${t.tags[0]}</span></div>
+  </div>`).join('');
+}
+
+/* ══════════════════════════════════
+   MODAL
+══════════════════════════════════ */
+let curTopic=null;
+function openTopic(idx,is12){
+ curTopic=is12?T12[idx]:T11[idx];
+ document.getElementById('mTitle').textContent=curTopic.title;
+ buildScript(curTopic);
+ buildWS(curTopic);
+ document.querySelectorAll('.tab-c').forEach(c=>c.classList.remove('active'));
+ document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+ document.getElementById('tab-script').classList.add('active');
+ document.querySelectorAll('.mtab')[0].classList.add('active');
+ document.getElementById('modalOv').classList.add('open');
+ document.body.style.overflow='hidden';
+}
+function closeModal(){
+ document.getElementById('modalOv').classList.remove('open');
+ document.body.style.overflow='';
+}
+function closeModalOv(e){if(e.target===document.getElementById('modalOv'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function switchMTab(id,btn){
+ document.querySelectorAll('.tab-c').forEach(c=>c.classList.remove('active'));
+ document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+ document.getElementById('tab-'+id).classList.add('active');
+ btn.classList.add('active');
+}
+
+/* ══════════════════════════════════
+   RENDER SCRIPT
+══════════════════════════════════ */
+function buildScript(t){
+ const s=t.script;
+ document.getElementById('tab-script').innerHTML=`
+  <div class="sc-block">
+   <div class="sc-head"><div class="sc-ico">🎣</div><h3>The Hook</h3><span>2–3 min</span></div>
+   <div class="sc-body">${s.hook}</div>
+  </div>
+  <div class="sc-block">
+   <div class="sc-head"><div class="sc-ico">🧠</div><h3>Core Concept Delivery</h3><span>20–25 min</span></div>
+   <div class="sc-body">${s.concept}</div>
+  </div>
+  <div class="sc-block">
+   <div class="sc-head"><div class="sc-ico">🌟</div><h3>Fruitful Ending</h3><span>2 min</span></div>
+   <div class="sc-body">${s.end}</div>
+  </div>
+  <div class="pro-card">
+   <div class="pro-l">⚡ Pro Trick & Tip</div>
+   <p>${s.trick}</p>
+  </div>`;
+}
+
+/* ══════════════════════════════════
+   RENDER WORKSHEET
+══════════════════════════════════ */
+function buildWS(t){
+ const w=t.ws;
+ let h=`<div class="ws-intro-bar"><div class="ws-intro-icon">🎯</div><div><h3>${t.title} — Activity Sheet</h3><p>Solve interactively · check answers instantly</p></div></div>`;
+ if(w.type==='mcq+match'){
+  h+=`<div class="ws-block"><div class="ws-bhead"><h4>MCQ Challenge</h4><span class="ws-badge">4 Questions</span></div><div class="ws-body" id="mcqb-${t.num}">`;
+  w.qs.forEach((q,qi)=>{
+   h+=`<div class="question"><div class="q-row"><span class="q-num">${qi+1}</span><span class="q-text">${q.q}</span></div>
+    <div class="opts" style="margin-left:30px">${q.o.map((o,oi)=>`<button class="opt" onclick="chkMCQ(this,${oi},${q.a},'xfb-${t.num}-${qi}')">${String.fromCharCode(65+oi)}. ${o}</button>`).join('')}</div>
+    <div class="fb" id="xfb-${t.num}-${qi}"></div></div>`;
+  });
+  h+=`</div></div>`;
+  const shuffled=[...w.mR].map((r,i)=>({r,i})).sort(()=>Math.random()-.5);
+  h+=`<div class="ws-block"><div class="ws-bhead"><h4>Column Matching</h4><span class="ws-badge">Interactive Game</span></div><div class="ws-body">
+   <div class="match-wrap" id="mw-${t.num}">
+    <div><h5>Column A</h5>${w.mL.map((item,i)=>`<div class="mi" onclick="pickMatch(this,'L','${t.num}',${i})" data-i="${i}">${item}</div>`).join('')}</div>
+    <div><h5>Column B</h5>${shuffled.map(({r,i})=>`<div class="mi" onclick="pickMatch(this,'R','${t.num}',${i})" data-i="${i}">${r}</div>`).join('')}</div>
+   </div>
+   <div class="match-score" id="ms-${t.num}">Select one from each column to match!</div>
+  </div></div>`;
+ }
+ if(w.type==='fillblanks'){
+  h+=`<div class="ws-block"><div class="ws-bhead"><h4>Fill in the Blanks</h4><span class="ws-badge">5 Questions</span></div><div class="ws-body">`;
+  w.ss.forEach((s,si)=>{
+   const pts=s.t.split('___');
+   h+=`<div class="question"><div class="q-row"><span class="q-num">${si+1}</span>
+    <div class="blank-sent">${pts[0]}<input class="blank-inp" type="text" placeholder="?" id="bi-${t.num}-${si}" data-ans="${s.a}" onkeydown="if(event.key==='Enter')chkBlank(this)">${pts[1]||''}</div>
+   </div></div>`;
+  });
+  h+=`<button class="check-btn" onclick="chkAllBlanks('${t.num}',${w.ss.length})">Check All Answers ✓</button>
+   <div class="blanks-r" id="br-${t.num}"></div></div></div>`;
+ }
+ document.getElementById('tab-ws').innerHTML=h;
+}
+
+/* ══════════════════════════════════
+   MCQ LOGIC
+══════════════════════════════════ */
+function chkMCQ(btn,sel,corr,fbId){
+ const qs=btn.closest('.question');
+ qs.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;b.classList.remove('correct-o','wrong-o');if(i===corr)b.classList.add('correct-o');else if(i===sel)b.classList.add('wrong-o');});
+ const fb=document.getElementById(fbId);
+ if(sel===corr){fb.textContent='✓ Correct!';fb.className='fb show fb-ok';}
+ else{fb.textContent=`✗ Answer: ${String.fromCharCode(65+corr)}. ${qs.querySelectorAll('.opt')[corr].textContent.slice(3)}`;fb.className='fb show fb-no';}
+}
+
+/* ══════════════════════════════════
+   MATCH LOGIC
+══════════════════════════════════ */
+const MS={};
+function pickMatch(el,side,tn,idx){
+ if(el.classList.contains('matched'))return;
+ if(!MS[tn])MS[tn]={L:null,R:null,score:0};
+ const st=MS[tn];
+ const same=st[side];
+ if(same){same.el.classList.remove('sel');st[side]=null;if(same.el===el)return;}
+ el.classList.add('sel');
+ st[side]={el,idx};
+ if(st.L&&st.R){
+  const total=document.querySelector(`#mw-${tn}>div`).querySelectorAll('.mi').length;
+  if(st.L.idx===st.R.idx){
+   st.L.el.classList.remove('sel');st.L.el.classList.add('matched');
+   st.R.el.classList.remove('sel');st.R.el.classList.add('matched');
+   st.score++;
+   document.getElementById('ms-'+tn).textContent=`✓ ${st.score}/${total} matched!${st.score===total?' 🏆 Perfect!':''}`;
+  }else{
+   st.L.el.classList.remove('sel');st.L.el.classList.add('wmatch');
+   st.R.el.classList.remove('sel');st.R.el.classList.add('wmatch');
+   setTimeout(()=>{st.L.el.classList.remove('wmatch');st.R.el.classList.remove('wmatch');},550);
+   document.getElementById('ms-'+tn).textContent=`Keep going! ${st.score}/${total} matched.`;
+  }
+  st.L=null;st.R=null;
+ }
+}
+
+/* ══════════════════════════════════
+   BLANKS LOGIC
+══════════════════════════════════ */
+function chkBlank(inp){
+ const u=inp.value.trim().toLowerCase(),a=inp.dataset.ans.toLowerCase();
+ if(!u)return;
+ const ok=u===a||u.includes(a)||a.includes(u);
+ inp.classList.toggle('ok-b',ok);inp.classList.toggle('no-b',!ok);
+}
+function chkAllBlanks(tn,cnt){
+ let c=0;
+ for(let i=0;i<cnt;i++){
+  const inp=document.getElementById(`bi-${tn}-${i}`);
+  if(!inp)continue;
+  const u=inp.value.trim().toLowerCase(),a=inp.dataset.ans.toLowerCase();
+  const ok=u&&(u===a||u.includes(a)||a.includes(u));
+  inp.classList.toggle('ok-b',ok);inp.classList.toggle('no-b',!ok&&!!u);
+  if(ok)c++;
+ }
+ const r=document.getElementById('br-'+tn);
+ r.textContent=`Score: ${c}/${cnt} — ${c===cnt?'🏆 Perfect!':c>=cnt/2?'👍 Good effort!':'📚 Review this topic'}`;
+ r.classList.add('show');
+}
+</script>
+</body>
+</html>
